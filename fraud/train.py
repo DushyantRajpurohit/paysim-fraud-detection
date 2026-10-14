@@ -73,7 +73,7 @@ def main():
     print(f"{len(df):,} transactions, {int(df.isFraud.sum()):,} fraud; "
           f"fraud outside {features.SCORED_TYPES}: {int(unscored.isFraud.sum())}")
 
-    df["dest_prior_txns"] = features.dest_prior_txns(df)  # over all types
+    df = df.join(features.dest_history(df))  # over all types
     df = df[df.type.isin(features.SCORED_TYPES)].sort_values("step", kind="stable")
     train, val, test = time_split(df)
     for name, part in [("train", train), ("val", val), ("test", test)]:
@@ -95,10 +95,11 @@ def main():
         results.append(evaluate(name, flags.astype(float), y["test"], amt["test"], 0.5))
 
     def fit_lgb(cols):
-        # Small trees on purpose: with 63 leaves validation AP peaks within ten
-        # trees and then falls as the model memorises hour-specific patterns.
+        # Small, heavily regularised trees: with 63 leaves validation AP peaks
+        # within ten trees, then falls as the model memorises hour-specific
+        # patterns. Leaf size picked on rolling folds (fraud/experiments.py).
         model = lgb.LGBMClassifier(n_estimators=2000, learning_rate=0.05, num_leaves=15,
-                                   min_child_samples=200, subsample=0.8, subsample_freq=1,
+                                   min_child_samples=1000, subsample=0.8, subsample_freq=1,
                                    colsample_bytree=0.8, verbose=-1, random_state=0)
         model.fit(X["train"][cols], y["train"], eval_X=(X["val"][cols],), eval_y=(y["val"],),
                   eval_metric="average_precision",

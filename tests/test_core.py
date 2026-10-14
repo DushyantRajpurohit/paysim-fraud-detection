@@ -12,18 +12,22 @@ def test_dest_history_only_counts_earlier_steps():
     df = pd.DataFrame({
         "nameDest": ["A", "A", "A", "B", "A"],
         "step":     [1,   1,   2,   2,   5],
+        "amount":   [10., 20., 30., 5.,  40.],
     })
+    h = features.dest_history(df)
     # Two same-step rows don't see each other; step 2 sees both step-1 rows.
-    assert features.dest_prior_txns(df).tolist() == [0, 0, 2, 0, 3]
+    assert h.dest_prior_txns.tolist() == [0, 0, 2, 0, 3]
+    assert h.dest_prior_amount.tolist() == [0, 0, 30, 0, 60]
 
 
 def test_realtime_features_ignore_post_transaction_balances():
     row = dict(type="TRANSFER", amount=100.0, oldbalanceOrg=100.0, oldbalanceDest=0.0,
-               step=25, dest_prior_txns=0)
+               step=25, dest_prior_txns=0, dest_prior_amount=0.0)
     a = features.build(pd.DataFrame([row]))[features.REALTIME]
     b = features.build(pd.DataFrame([{**row, "newbalanceOrig": 0.0, "newbalanceDest": 999.0}]))
     pd.testing.assert_frame_equal(a, b[features.REALTIME])
     assert a.hour.item() == 1 and a.drains_orig.item() == 1
+    assert a.amount_vs_dest_usual.item() == -1  # destination never seen
 
 
 def test_best_threshold_matches_brute_force():
@@ -60,3 +64,5 @@ def test_api_scores_and_explains():
     assert 0 <= body["score"] <= 1 and len(body["reasons"]) == 3
     assert client.post("/score", json={**tx, "type": "PAYMENT"}).json()["decision"] == "approve"
     assert client.post("/score", json={**tx, "amount": -1}).status_code == 422
+    page = client.get("/")
+    assert page.status_code == 200 and "/*EXAMPLES*/" not in page.text  # presets embedded

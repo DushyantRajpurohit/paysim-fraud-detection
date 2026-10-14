@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fraud Scoring Demo</title>
+<style>
+  :root {
+    --bg: #fafaf9; --panel: #ffffff; --text: #1c1917; --muted: #57534e; --line: #e7e5e4;
+    --accent: #1d4ed8; --risk: #b91c1c; --safe: #15803d; --risk-bg: #fef2f2; --safe-bg: #f0fdf4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c0a09; --panel: #1c1917; --text: #f5f5f4; --muted: #a8a29e; --line: #292524;
+      --accent: #93c5fd; --risk: #fca5a5; --safe: #86efac; --risk-bg: #2a1212; --safe-bg: #0f2417;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  p.lede { color: var(--muted); margin: 0 0 24px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+  .examples { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .examples button { background: transparent; color: var(--accent); border: 1px solid var(--line);
+                     border-radius: 999px; padding: 6px 12px; font: inherit; cursor: pointer; }
+  .examples button:hover { border-color: var(--accent); }
+  form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 16px; }
+  label { display: grid; gap: 4px; font-size: 0.85rem; color: var(--muted); }
+  input, select { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line);
+                  border-radius: 6px; padding: 8px 10px; width: 100%; }
+  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .submit { grid-column: 1 / -1; justify-self: start; background: var(--accent); color: var(--bg);
+            border: 0; border-radius: 6px; padding: 10px 18px; font: inherit; font-weight: 600; cursor: pointer; }
+  .verdict { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .badge { font-weight: 700; padding: 4px 10px; border-radius: 6px; }
+  .badge.review { color: var(--risk); background: var(--risk-bg); }
+  .badge.approve { color: var(--safe); background: var(--safe-bg); }
+  .muted { color: var(--muted); font-size: 0.9rem; }
+  .reason { display: grid; grid-template-columns: 170px 1fr 64px; gap: 10px; align-items: center; margin: 6px 0; }
+  .track { position: relative; height: 10px; background: var(--line); border-radius: 5px; }
+  .bar { position: absolute; top: 0; height: 10px; border-radius: 5px; }
+  .bar.up { left: 50%; background: var(--risk); }
+  .bar.down { right: 50%; background: var(--safe); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; font-size: 0.85rem; }
+  code { font-size: 0.85em; }
+  @media (max-width: 520px) { .reason { grid-template-columns: 1fr 52px; } .reason .track { grid-column: 1 / -1; grid-row: 2; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Fraud scoring demo</h1>
+  <p class="lede">A LightGBM model trained on PaySim mobile-money transfers. It never sees the origin
+    account's balance, because in PaySim that alone gives fraud away. Bars show each feature's
+    exact SHAP contribution in log-odds: red pushes toward review, green toward approve.</p>
+
+  <div class="panel">
+    <div class="examples" id="examples"></div>
+    <form id="form">
+      <label>Type
+        <select name="type">
+          <option>TRANSFER</option><option>CASH_OUT</option><option>PAYMENT</option>
+          <option>CASH_IN</option><option>DEBIT</option>
+        </select>
+      </label>
+      <label>Amount <input name="amount" type="number" min="0" step="any" required></label>
+      <label>Origin balance before <input name="oldbalanceOrg" type="number" min="0" step="any" required></label>
+      <label>Destination balance before <input name="oldbalanceDest" type="number" min="0" step="any" required></label>
+      <label>Hour (step, 1–743) <input name="step" type="number" min="1" step="1" required></label>
+      <label>Destination's earlier payments <input name="dest_prior_txns" type="number" min="0" step="1" required></label>
+      <label>Destination's earlier total received <input name="dest_prior_amount" type="number" min="0" step="any" required></label>
+      <button class="submit" type="submit">Score</button>
+    </form>
+  </div>
+
+  <div class="panel" id="result" hidden aria-live="polite"></div>
+  <p class="muted">API: <code>POST /score</code>, <code>POST /score/batch</code>, <code>POST /drift</code> ·
+    <a href="/docs">OpenAPI docs</a></p>
+</main>
+<script>
+const EXAMPLES = [{"label": "Fraud the model catches", "tx": {"type": "TRANSFER", "amount": 4445514.2, "oldbalanceOrg": 4445514.2, "oldbalanceDest": 0.0, "step": 379, "dest_prior_txns": 0, "dest_prior_amount": 0.0}}, {"label": "Fraud the model misses", "tx": {"type": "CASH_OUT", "amount": 99656.93, "oldbalanceOrg": 99656.93, "oldbalanceDest": 0.0, "step": 546, "dest_prior_txns": 0, "dest_prior_amount": 0.0}}, {"label": "Legitimate transfer", "tx": {"type": "TRANSFER", "amount": 512223.02, "oldbalanceOrg": 5015.0, "oldbalanceDest": 72330.64, "step": 378, "dest_prior_txns": 2, "dest_prior_amount": 72330.64}}, {"label": "Legitimate, flagged anyway", "tx": {"type": "CASH_OUT", "amount": 293688.71, "oldbalanceOrg": 164503.0, "oldbalanceDest": 59276.04, "step": 656, "dest_prior_txns": 4, "dest_prior_amount": 601259.56}}];
+const form = document.getElementById("form");
+const result = document.getElementById("result");
+const fill = (tx) => { for (const [k, v] of Object.entries(tx)) if (form.elements[k]) form.elements[k].value = v; };
+const box = document.getElementById("examples");
+for (const ex of EXAMPLES) {
+  const b = document.createElement("button");
+  b.type = "button"; b.textContent = ex.label;
+  b.onclick = () => { fill(ex.tx); form.requestSubmit(); };
+  box.appendChild(b);
+}
+if (EXAMPLES.length) fill(EXAMPLES[0].tx);
+
+const fmt = (x) => x.toLocaleString(undefined, { maximumFractionDigits: 4 });
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const tx = Object.fromEntries(new FormData(form));
+  for (const k of Object.keys(tx)) if (k !== "type") tx[k] = Number(tx[k]);
+  result.hidden = false;
+  result.textContent = "Scoring…";
+  try {
+    const r = await fetch("/score", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(tx) });
+    const body = await r.json();
+    if (!r.ok) { result.textContent = "Invalid input: " + (body.detail?.[0]?.msg ?? r.status); return; }
+    render(body);
+  } catch (err) { result.textContent = "Request failed: " + err.message; }
+});
+
+function render(s) {
+  result.replaceChildren();
+  const v = document.createElement("div"); v.className = "verdict";
+  const badge = document.createElement("span"); badge.className = "badge " + s.decision;
+  badge.textContent = s.decision === "review" ? "Send to review" : "Approve";
+  const meta = document.createElement("span"); meta.className = "muted";
+  meta.textContent = s.score === null ? "Not scored: this type has no fraud in the training data."
+    : `score ${fmt(s.score)} · threshold ${fmt(s.threshold)}`;
+  v.append(badge, meta); result.append(v);
+  const max = Math.max(...s.reasons.map((r) => Math.abs(r.contribution)), 1e-9);
+  for (const r of s.reasons) {
+    const row = document.createElement("div"); row.className = "reason";
+    const name = document.createElement("code"); name.textContent = r.feature;
+    const track = document.createElement("div"); track.className = "track";
+    const bar = document.createElement("div"); bar.className = "bar " + (r.contribution > 0 ? "up" : "down");
+    bar.style.width = (50 * Math.abs(r.contribution) / max) + "%";
+    track.append(bar);
+    const num = document.createElement("span"); num.className = "num";
+    num.textContent = (r.contribution > 0 ? "+" : "") + r.contribution.toFixed(2);
+    row.append(name, track, num); result.append(row);
+  }
+}
+</script>
+</body>
+</html>

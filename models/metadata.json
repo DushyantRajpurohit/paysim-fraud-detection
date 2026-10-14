@@ -5,9 +5,11 @@
     "hour",
     "dest_empty_before",
     "log_dest_balance",
-    "dest_prior_txns"
+    "dest_prior_txns",
+    "log_dest_prior_amount",
+    "amount_vs_dest_usual"
   ],
-  "threshold": 0.009724264776073008,
+  "threshold": 0.013592627162302898,
   "review_cost": 10000.0,
   "trained_on_steps": [
     1,

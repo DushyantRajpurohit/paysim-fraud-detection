@@ -1,0 +1,93 @@
+{
+  "amount_equals_balance": {
+    "fraud": 0.9782052843053696,
+    "legit": 0.0
+  },
+  "psi_train_vs_test": {
+    "is_transfer": 0.001,
+    "log_amount": 0.002,
+    "hour": 0.104,
+    "dest_empty_before": 0.002,
+    "log_dest_balance": 0.005,
+    "dest_prior_txns": 0.001,
+    "log_dest_prior_amount": 0.004,
+    "amount_vs_dest_usual": 0.001,
+    "dest_hours_since_last": 0.967
+  },
+  "feature_sets": {
+    "signature-free, no history": {
+      "fold_ap": [
+        0.456,
+        0.461,
+        0.391
+      ],
+      "mean": 0.436
+    },
+    "+ destination history (served)": {
+      "fold_ap": [
+        0.454,
+        0.465,
+        0.431
+      ],
+      "mean": 0.45
+    },
+    "+ history + hours since last": {
+      "fold_ap": [
+        0.442,
+        0.493,
+        0.44
+      ],
+      "mean": 0.458
+    }
+  },
+  "tuning": {
+    "leaves=7, min_child=200": {
+      "fold_ap": [
+        0.442,
+        0.454,
+        0.397
+      ],
+      "mean": 0.431
+    },
+    "leaves=7, min_child=1000": {
+      "fold_ap": [
+        0.455,
+        0.485,
+        0.453
+      ],
+      "mean": 0.464
+    },
+    "leaves=15, min_child=200": {
+      "fold_ap": [
+        0.454,
+        0.465,
+        0.431
+      ],
+      "mean": 0.45
+    },
+    "leaves=15, min_child=1000": {
+      "fold_ap": [
+        0.461,
+        0.489,
+        0.45
+      ],
+      "mean": 0.467
+    },
+    "leaves=31, min_child=200": {
+      "fold_ap": [
+        0.45,
+        0.474,
+        0.397
+      ],
+      "mean": 0.44
+    },
+    "leaves=31, min_child=1000": {
+      "fold_ap": [
+        0.459,
+        0.478,
+        0.447
+      ],
+      "mean": 0.461
+    }
+  }
+}

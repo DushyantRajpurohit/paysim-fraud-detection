@@ -13,6 +13,7 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from fraud import features, metrics
@@ -31,8 +32,10 @@ class Transaction(BaseModel):
     oldbalanceOrg: float = Field(ge=0)
     oldbalanceDest: float = Field(ge=0)
     step: int = Field(ge=1, description="Hour since the start of the simulation")
-    # ponytail: passed in by the caller; production would read it from a feature store.
+    # ponytail: destination history is passed in by the caller; production
+    # would read it from a feature store.
     dest_prior_txns: int = Field(0, ge=0, description="Payments the destination received before this hour")
+    dest_prior_amount: float = Field(0, ge=0, description="Total the destination received before this hour")
 
 
 class Reason(BaseModel):
@@ -45,6 +48,11 @@ class Score(BaseModel):
     decision: Literal["approve", "review"]
     threshold: float
     reasons: list[Reason]
+
+
+@app.get("/", include_in_schema=False)
+def demo():
+    return FileResponse(Path(__file__).resolve().parent / "static" / "index.html")
 
 
 @app.get("/health")
