@@ -1,0 +1,131 @@
+{
+  "results": [
+    {
+      "model": "PaySim built-in rule (transfer > 200k)",
+      "pr_auc": 0.013036615375941502,
+      "roc_auc": 0.5016209476309227,
+      "threshold": 0.5,
+      "precision": 1.0,
+      "recall": 0.0032418952618453864,
+      "fraud_amount_caught": 0.011219829365098308,
+      "alerts": 13,
+      "cost": 6252985726.139999
+    },
+    {
+      "model": "One-line rule: amount == origin balance",
+      "pr_auc": 0.9750604698906605,
+      "roc_auc": 0.9874064837905236,
+      "threshold": 0.5,
+      "precision": 1.0,
+      "recall": 0.9748129675810474,
+      "fraud_amount_caught": 0.8422943301360035,
+      "alerts": 3909,
+      "cost": 1036390340.5
+    },
+    {
+      "model": "LightGBM, all pre-transaction features",
+      "pr_auc": 0.9792844577230131,
+      "roc_auc": 0.9996031638835828,
+      "threshold": 0.024131194178030148,
+      "precision": 0.8472104818258664,
+      "recall": 0.9997506234413965,
+      "fraud_amount_caught": 0.9999368979743699,
+      "alerts": 4732,
+      "cost": 47719045.08,
+      "trees": 1
+    },
+    {
+      "model": "LightGBM, + post-transaction balances",
+      "pr_auc": 0.998432443242588,
+      "roc_auc": 0.9985029056222972,
+      "threshold": 0.9618916014653601,
+      "precision": 1.0,
+      "recall": 0.9855361596009975,
+      "fraud_amount_caught": 0.9634084729854959,
+      "alerts": 3952,
+      "cost": 270917782.86,
+      "trees": 94
+    },
+    {
+      "model": "Logistic regression, signature-free",
+      "pr_auc": 0.2687415680876537,
+      "roc_auc": 0.8580058634753833,
+      "threshold": 0.01241941876297784,
+      "precision": 0.17323504394669692,
+      "recall": 0.4571072319201995,
+      "fraud_amount_caught": 0.6384600213209836,
+      "alerts": 10581,
+      "cost": 2392119326.4300003
+    },
+    {
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.5836589295845317,
+      "roc_auc": 0.9124684101085504,
+      "threshold": 0.009724264776073008,
+      "precision": 0.3091485986250661,
+      "recall": 0.728927680798005,
+      "fraud_amount_caught": 0.9504704518703102,
+      "alerts": 9455,
+      "cost": 407765341.32,
+      "trees": 113
+    }
+  ],
+  "review_cost_sweep": [
+    {
+      "review_cost": 100,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.5836589295845317,
+      "roc_auc": 0.9124684101085504,
+      "threshold": 0.0005212072819809385,
+      "precision": 0.02775621863785512,
+      "recall": 0.9007481296758105,
+      "fraud_amount_caught": 0.9891436746681539,
+      "alerts": 130133,
+      "cost": 81666614.49000001
+    },
+    {
+      "review_cost": 1000,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.5836589295845317,
+      "roc_auc": 0.9124684101085504,
+      "threshold": 0.0068036731066127565,
+      "precision": 0.2673871361338679,
+      "recall": 0.7650872817955112,
+      "fraud_amount_caught": 0.9685046863099365,
+      "alerts": 11474,
+      "cost": 210644309.44
+    },
+    {
+      "review_cost": 10000,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.5836589295845317,
+      "roc_auc": 0.9124684101085504,
+      "threshold": 0.009724264776073008,
+      "precision": 0.3091485986250661,
+      "recall": 0.728927680798005,
+      "fraud_amount_caught": 0.9504704518703102,
+      "alerts": 9455,
+      "cost": 407765341.32
+    },
+    {
+      "review_cost": 100000,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.5836589295845317,
+      "roc_auc": 0.9124684101085504,
+      "threshold": 0.1515516496919589,
+      "precision": 0.7198443579766537,
+      "recall": 0.4613466334164589,
+      "fraud_amount_caught": 0.8371515293265058,
+      "alerts": 2570,
+      "cost": 1286822424.2199998
+    }
+  ],
+  "psi_train_vs_test": {
+    "is_transfer": 0.0013670734337254838,
+    "log_amount": 0.002103799512995545,
+    "hour": 0.1044962527971119,
+    "dest_empty_before": 0.002462827258778282,
+    "log_dest_balance": 0.0045611987195487685,
+    "dest_prior_txns": 0.0013666513506987673
+  }
+}

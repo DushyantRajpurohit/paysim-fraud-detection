@@ -1,0 +1,16 @@
+{
+  "features": [
+    "is_transfer",
+    "log_amount",
+    "hour",
+    "dest_empty_before",
+    "log_dest_balance",
+    "dest_prior_txns"
+  ],
+  "threshold": 0.009724264776073008,
+  "review_cost": 10000.0,
+  "trained_on_steps": [
+    1,
+    323
+  ]
+}
