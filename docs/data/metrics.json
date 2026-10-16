@@ -1,0 +1,661 @@
+{
+  "results": [
+    {
+      "model": "PaySim built-in rule (transfer > 200k)",
+      "pr_auc": 0.013036615375941502,
+      "roc_auc": 0.5016209476309227,
+      "threshold": 0.5,
+      "precision": 1.0,
+      "recall": 0.0032418952618453864,
+      "fraud_amount_caught": 0.011219829365098308,
+      "alerts": 13,
+      "cost": 6252985726.139999
+    },
+    {
+      "model": "One-line rule: amount == origin balance",
+      "pr_auc": 0.9750604698906605,
+      "roc_auc": 0.9874064837905236,
+      "threshold": 0.5,
+      "precision": 1.0,
+      "recall": 0.9748129675810474,
+      "fraud_amount_caught": 0.8422943301360035,
+      "alerts": 3909,
+      "cost": 1036390340.5
+    },
+    {
+      "model": "LightGBM, all pre-transaction features",
+      "pr_auc": 0.9894999742907983,
+      "roc_auc": 0.9996479414629067,
+      "threshold": 0.013387672632518874,
+      "precision": 0.8432694333263113,
+      "recall": 0.9982543640897755,
+      "fraud_amount_caught": 0.9998101920119007,
+      "alerts": 4747,
+      "cost": 48670309.23,
+      "trees": 371
+    },
+    {
+      "model": "LightGBM, + post-transaction balances",
+      "pr_auc": 0.9989117674110125,
+      "roc_auc": 0.9997412881830717,
+      "threshold": 0.5735892258380063,
+      "precision": 0.9994977398292315,
+      "recall": 0.9925187032418953,
+      "fraud_amount_caught": 0.9715666226074094,
+      "alerts": 3982,
+      "cost": 219627212.89000002,
+      "trees": 45
+    },
+    {
+      "model": "Logistic regression, signature-free",
+      "pr_auc": 0.2937337157018388,
+      "roc_auc": 0.8595027079007113,
+      "threshold": 0.013751687659992348,
+      "precision": 0.18021270367840764,
+      "recall": 0.46059850374064837,
+      "fraud_amount_caught": 0.622340868868345,
+      "alerts": 10249,
+      "cost": 2490733747.96
+    },
+    {
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.013592627162302898,
+      "precision": 0.29426909507008675,
+      "recall": 0.769576059850374,
+      "fraud_amount_caught": 0.964440425262839,
+      "alerts": 10487,
+      "cost": 329741915.03,
+      "trees": 143
+    }
+  ],
+  "review_cost_sweep": [
+    {
+      "review_cost": 10,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.00019652336392462076,
+      "precision": 0.013458822251195133,
+      "recall": 0.9885286783042394,
+      "fraud_amount_caught": 0.9988556784262117,
+      "alerts": 294528,
+      "cost": 10181749.66
+    },
+    {
+      "review_cost": 15,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.00019652336392462076,
+      "precision": 0.013458822251195133,
+      "recall": 0.9885286783042394,
+      "fraud_amount_caught": 0.9988556784262117,
+      "alerts": 294528,
+      "cost": 11654389.66
+    },
+    {
+      "review_cost": 22,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.00027052823458818245,
+      "precision": 0.01805222550821446,
+      "recall": 0.9650872817955112,
+      "fraud_amount_caught": 0.9964581066639414,
+      "alerts": 214378,
+      "cost": 27114568.6
+    },
+    {
+      "review_cost": 32,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.00027052823458818245,
+      "precision": 0.01805222550821446,
+      "recall": 0.9650872817955112,
+      "fraud_amount_caught": 0.9964581066639414,
+      "alerts": 214378,
+      "cost": 29258348.6
+    },
+    {
+      "review_cost": 46,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0002873128623899098,
+      "precision": 0.019429424582358162,
+      "recall": 0.9605985037406484,
+      "fraud_amount_caught": 0.9961256564952493,
+      "alerts": 198256,
+      "cost": 33620379.56
+    },
+    {
+      "review_cost": 68,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0005190883562760456,
+      "precision": 0.03190666827030463,
+      "recall": 0.9261845386533666,
+      "fraud_amount_caught": 0.9925274777069867,
+      "alerts": 116402,
+      "cost": 55170130.54
+    },
+    {
+      "review_cost": 100,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0006311511611588242,
+      "precision": 0.03898386323693881,
+      "recall": 0.912718204488778,
+      "fraud_amount_caught": 0.990720854734712,
+      "alerts": 93885,
+      "cost": 68068030.92999999
+    },
+    {
+      "review_cost": 147,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0006311511611588242,
+      "precision": 0.03898386323693881,
+      "recall": 0.912718204488778,
+      "fraud_amount_caught": 0.990720854734712,
+      "alerts": 93885,
+      "cost": 72480625.92999999
+    },
+    {
+      "review_cost": 215,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0012209438492509779,
+      "precision": 0.09770488100951359,
+      "recall": 0.8630922693266833,
+      "fraud_amount_caught": 0.984332941509396,
+      "alerts": 35423,
+      "cost": 106691411.22
+    },
+    {
+      "review_cost": 316,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0013133159763082944,
+      "precision": 0.10765049514229484,
+      "recall": 0.859351620947631,
+      "fraud_amount_caught": 0.9837561915744671,
+      "alerts": 32011,
+      "cost": 112838197.94000001
+    },
+    {
+      "review_cost": 464,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0018945593803334948,
+      "precision": 0.16011899140617622,
+      "recall": 0.845635910224439,
+      "fraud_amount_caught": 0.9818237437813081,
+      "alerts": 21178,
+      "cost": 124769742.31
+    },
+    {
+      "review_cost": 681,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0026582175384215426,
+      "precision": 0.1924971363115693,
+      "recall": 0.8381546134663341,
+      "fraud_amount_caught": 0.9805735006908742,
+      "alerts": 17460,
+      "cost": 134739707.28
+    },
+    {
+      "review_cost": 1000,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0073644859373372265,
+      "precision": 0.2567196928140428,
+      "recall": 0.8169576059850374,
+      "fraud_amount_caught": 0.976496463244978,
+      "alerts": 12761,
+      "cost": 161392848.36
+    },
+    {
+      "review_cost": 1468,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0073644859373372265,
+      "precision": 0.2567196928140428,
+      "recall": 0.8169576059850374,
+      "fraud_amount_caught": 0.976496463244978,
+      "alerts": 12761,
+      "cost": 167364996.36
+    },
+    {
+      "review_cost": 2154,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.0073644859373372265,
+      "precision": 0.2567196928140428,
+      "recall": 0.8169576059850374,
+      "fraud_amount_caught": 0.976496463244978,
+      "alerts": 12761,
+      "cost": 176119042.36
+    },
+    {
+      "review_cost": 3162,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.007556801386521473,
+      "precision": 0.2577977315689981,
+      "recall": 0.8162094763092269,
+      "fraud_amount_caught": 0.9763652473383366,
+      "alerts": 12696,
+      "cost": 189606384.53
+    },
+    {
+      "review_cost": 4642,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.012042622292279604,
+      "precision": 0.27998596121786434,
+      "recall": 0.7957605985037407,
+      "fraud_amount_caught": 0.9734727200945416,
+      "alerts": 11397,
+      "cost": 220658292.79
+    },
+    {
+      "review_cost": 6813,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.013514907910988815,
+      "precision": 0.29386048279794713,
+      "recall": 0.771072319201995,
+      "fraud_amount_caught": 0.9648855677627801,
+      "alerts": 10522,
+      "cost": 293743305.43
+    },
+    {
+      "review_cost": 10000,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.013592627162302898,
+      "precision": 0.29426909507008675,
+      "recall": 0.769576059850374,
+      "fraud_amount_caught": 0.964440425262839,
+      "alerts": 10487,
+      "cost": 329741915.03
+    },
+    {
+      "review_cost": 14678,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.03666606966445753,
+      "precision": 0.4839810426540284,
+      "recall": 0.6366583541147132,
+      "fraud_amount_caught": 0.9155181147911406,
+      "alerts": 5275,
+      "cost": 611673652.13
+    },
+    {
+      "review_cost": 21544,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.03677020990243065,
+      "precision": 0.48524090649400115,
+      "recall": 0.6354114713216957,
+      "fraud_amount_caught": 0.9154133794522336,
+      "alerts": 5251,
+      "cost": 648037072.28
+    },
+    {
+      "review_cost": 31623,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.11771161395584645,
+      "precision": 0.6879248947879573,
+      "recall": 0.529925187032419,
+      "fraud_amount_caught": 0.8848618544329877,
+      "alerts": 3089,
+      "cost": 825794946.5899999
+    },
+    {
+      "review_cost": 46416,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.17447343834017104,
+      "precision": 0.7508939213349225,
+      "recall": 0.4713216957605985,
+      "fraud_amount_caught": 0.8273319887512794,
+      "alerts": 2517,
+      "cost": 1208748383.21
+    },
+    {
+      "review_cost": 68129,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.17447343834017104,
+      "precision": 0.7508939213349225,
+      "recall": 0.4713216957605985,
+      "fraud_amount_caught": 0.8273319887512794,
+      "alerts": 2517,
+      "cost": 1263400004.21
+    },
+    {
+      "review_cost": 100000,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.1966575255421159,
+      "precision": 0.7693588676103247,
+      "recall": 0.4608478802992519,
+      "fraud_amount_caught": 0.819794117468383,
+      "alerts": 2402,
+      "cost": 1379787360.1999998
+    },
+    {
+      "review_cost": 146780,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.1966575255421159,
+      "precision": 0.7693588676103247,
+      "recall": 0.4608478802992519,
+      "fraud_amount_caught": 0.819794117468383,
+      "alerts": 2402,
+      "cost": 1492152920.1999998
+    },
+    {
+      "review_cost": 215443,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.2019312070331562,
+      "precision": 0.7721943048576214,
+      "recall": 0.4598503740648379,
+      "fraud_amount_caught": 0.8196370573020905,
+      "alerts": 2388,
+      "cost": 1655058462.5
+    },
+    {
+      "review_cost": 316228,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.331480526075168,
+      "precision": 0.858534085084572,
+      "recall": 0.4177057356608479,
+      "fraud_amount_caught": 0.7366651703026811,
+      "alerts": 1951,
+      "cost": 2282239670.2200003
+    },
+    {
+      "review_cost": 464159,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.39120230175910553,
+      "precision": 0.8863761720904578,
+      "recall": 0.40074812967581047,
+      "fraud_amount_caught": 0.7264555155036161,
+      "alerts": 1813,
+      "cost": 2571363003.57
+    },
+    {
+      "review_cost": 681292,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.4591498082551032,
+      "precision": 0.9095182138660399,
+      "recall": 0.3860349127182045,
+      "fraud_amount_caught": 0.7208340310418043,
+      "alerts": 1702,
+      "cost": 2924950907.69
+    },
+    {
+      "review_cost": 1000000,
+      "model": "LightGBM, signature-free (served)",
+      "pr_auc": 0.6340649478582627,
+      "roc_auc": 0.9456551695177933,
+      "threshold": 0.4591498082551032,
+      "precision": 0.9095182138660399,
+      "recall": 0.3860349127182045,
+      "fraud_amount_caught": 0.7208340310418043,
+      "alerts": 1702,
+      "cost": 3467391923.69
+    }
+  ],
+  "psi_train_vs_test": {
+    "is_transfer": 0.0013670734337254838,
+    "log_amount": 0.002103799512995545,
+    "hour": 0.1044962527971119,
+    "dest_empty_before": 0.002462827258778282,
+    "log_dest_balance": 0.0045611987195487685,
+    "dest_prior_txns": 0.0013666513506987673,
+    "log_dest_prior_amount": 0.004332496160853333,
+    "amount_vs_dest_usual": 0.0008319217027098904
+  },
+  "first_attempt": {
+    "features": [
+      "is_transfer",
+      "log_amount",
+      "hour",
+      "log_orig_balance",
+      "amount_to_balance",
+      "drains_orig",
+      "dest_empty_before",
+      "log_dest_balance",
+      "dest_prior_txns"
+    ],
+    "trees": 1,
+    "pr_auc": 0.9803895496544777
+  },
+  "signature": {
+    "fraud": 8213,
+    "fraud_equal": 8034,
+    "legit": 2762196,
+    "legit_equal": 0
+  },
+  "split": {
+    "train": {
+      "steps": [
+        1,
+        323
+      ],
+      "rows": 1951895,
+      "fraud": 3643
+    },
+    "val": {
+      "steps": [
+        324,
+        377
+      ],
+      "rows": 410437,
+      "fraud": 560
+    },
+    "test": {
+      "steps": [
+        378,
+        743
+      ],
+      "rows": 408077,
+      "fraud": 4010
+    }
+  },
+  "volume_by_day": [
+    {
+      "day": 0,
+      "legit": 249915,
+      "fraud": 265
+    },
+    {
+      "day": 1,
+      "legit": 202083,
+      "fraud": 305
+    },
+    {
+      "day": 2,
+      "legit": 1498,
+      "fraud": 306
+    },
+    {
+      "day": 3,
+      "legit": 6873,
+      "fraud": 272
+    },
+    {
+      "day": 4,
+      "legit": 3342,
+      "fraud": 244
+    },
+    {
+      "day": 5,
+      "legit": 195499,
+      "fraud": 230
+    },
+    {
+      "day": 6,
+      "legit": 185680,
+      "fraud": 280
+    },
+    {
+      "day": 7,
+      "legit": 196663,
+      "fraud": 270
+    },
+    {
+      "day": 8,
+      "legit": 181413,
+      "fraud": 259
+    },
+    {
+      "day": 9,
+      "legit": 171511,
+      "fraud": 274
+    },
+    {
+      "day": 10,
+      "legit": 181970,
+      "fraud": 268
+    },
+    {
+      "day": 11,
+      "legit": 149031,
+      "fraud": 296
+    },
+    {
+      "day": 12,
+      "legit": 188595,
+      "fraud": 242
+    },
+    {
+      "day": 13,
+      "legit": 172401,
+      "fraud": 238
+    },
+    {
+      "day": 14,
+      "legit": 173449,
+      "fraud": 260
+    },
+    {
+      "day": 15,
+      "legit": 162954,
+      "fraud": 254
+    },
+    {
+      "day": 16,
+      "legit": 186294,
+      "fraud": 316
+    },
+    {
+      "day": 17,
+      "legit": 9862,
+      "fraud": 274
+    },
+    {
+      "day": 18,
+      "legit": 3967,
+      "fraud": 242
+    },
+    {
+      "day": 19,
+      "legit": 7906,
+      "fraud": 248
+    },
+    {
+      "day": 20,
+      "legit": 9836,
+      "fraud": 268
+    },
+    {
+      "day": 21,
+      "legit": 21103,
+      "fraud": 252
+    },
+    {
+      "day": 22,
+      "legit": 20482,
+      "fraud": 220
+    },
+    {
+      "day": 23,
+      "legit": 13606,
+      "fraud": 276
+    },
+    {
+      "day": 24,
+      "legit": 24313,
+      "fraud": 236
+    },
+    {
+      "day": 25,
+      "legit": 5186,
+      "fraud": 280
+    },
+    {
+      "day": 26,
+      "legit": 3442,
+      "fraud": 276
+    },
+    {
+      "day": 27,
+      "legit": 5426,
+      "fraud": 254
+    },
+    {
+      "day": 28,
+      "legit": 23103,
+      "fraud": 262
+    },
+    {
+      "day": 29,
+      "legit": 4793,
+      "fraud": 264
+    },
+    {
+      "day": 30,
+      "legit": 0,
+      "fraud": 282
+    }
+  ]
+}

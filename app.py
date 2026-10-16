@@ -13,6 +13,7 @@ import lightgbm as lgb
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
@@ -24,6 +25,9 @@ booster = lgb.Booster(model_file=str(MODELS / "model.txt"))
 reference = pd.read_parquet(MODELS / "reference.parquet")
 
 app = FastAPI(title="Fraud scoring", version="1.0")
+# The story site on GitHub Pages calls /score from the browser.
+app.add_middleware(CORSMiddleware, allow_origins=["https://dushyantrajpurohit.github.io"],
+                   allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
 
 
 class Transaction(BaseModel):

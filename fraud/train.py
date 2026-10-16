@@ -19,6 +19,7 @@ from fraud import features, metrics
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA, MODELS, REPORTS = ROOT / "data", ROOT / "models", ROOT / "reports"
+SITE_DATA = ROOT / "docs" / "data"  # the story site reads the same numbers
 SPLIT = (0.70, 0.85)  # train | validation | test, by time
 
 
@@ -42,6 +43,15 @@ def load() -> pd.DataFrame:
     DATA.mkdir(exist_ok=True)
     df.to_parquet(cache)
     return df
+
+
+def save_report(name, obj):
+    """Write a report and its copy for the story site, so the page can never
+    show a number the pipeline did not produce."""
+    text = json.dumps(obj, indent=2)
+    for folder in (REPORTS, SITE_DATA):
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / name).write_text(text)
 
 
 def time_split(df):
@@ -94,13 +104,13 @@ def main():
     for name, flags in rules.items():
         results.append(evaluate(name, flags.astype(float), y["test"], amt["test"], 0.5))
 
-    def fit_lgb(cols):
+    def fit_lgb(cols, **params):
         # Small, heavily regularised trees: with 63 leaves validation AP peaks
         # within ten trees, then falls as the model memorises hour-specific
         # patterns. Leaf size picked on rolling folds (fraud/experiments.py).
-        model = lgb.LGBMClassifier(n_estimators=2000, learning_rate=0.05, num_leaves=15,
-                                   min_child_samples=1000, subsample=0.8, subsample_freq=1,
-                                   colsample_bytree=0.8, verbose=-1, random_state=0)
+        model = lgb.LGBMClassifier(**{**dict(n_estimators=2000, learning_rate=0.05, num_leaves=15,
+                                              min_child_samples=1000, subsample=0.8, subsample_freq=1,
+                                              colsample_bytree=0.8, verbose=-1, random_state=0), **params})
         model.fit(X["train"][cols], y["train"], eval_X=(X["val"][cols],), eval_y=(y["val"],),
                   eval_metric="average_precision",
                   callbacks=[lgb.early_stopping(100, verbose=False)])
@@ -129,11 +139,11 @@ def main():
     served_result = next(r for r in results if r["model"] == served_name)
     # The threshold is a business decision; show how it moves with review cost.
     sweep = []
-    for review_cost in (100, 1_000, 10_000, 100_000):
+    for review_cost in np.geomspace(10, 1_000_000, 31).round():
         t, _ = metrics.best_threshold(val_scores[served_name], y["val"], amt["val"], review_cost)
         r = evaluate(served_name, test_scores[served_name], y["test"], amt["test"], t)
         r["cost"] = float(metrics.cost_at(t, test_scores[served_name], y["test"], amt["test"], review_cost))
-        sweep.append({"review_cost": review_cost, **r})
+        sweep.append({"review_cost": int(review_cost), **r})
     cols = features.SIGNATURE_FREE
     drift = {c: metrics.psi(X["train"][c].to_numpy(), X["test"][c].to_numpy()) for c in cols}
 
@@ -148,8 +158,34 @@ def main():
         "review_cost": metrics.REVIEW_COST,
         "trained_on_steps": [int(train.step.min()), int(train.step.max())],
     }, indent=2))
-    (REPORTS / "metrics.json").write_text(json.dumps(
-        {"results": results, "review_cost_sweep": sweep, "psi_train_vs_test": drift}, indent=2))
+    # My first attempt, kept reproducible: the features and tree size I started
+    # with (before destination history existed). Early stopping keeps almost
+    # nothing, because a split on the origin balance already separates PaySim's fraud.
+    first_cols = [c for c in features.REALTIME if c not in features.DEST_HISTORY]
+    first = fit_lgb(first_cols, num_leaves=63, min_child_samples=50)
+    first_attempt = {
+        "features": first_cols,
+        "trees": first.booster_.num_trees(),
+        "pr_auc": float(average_precision_score(y["test"], first.predict_proba(X["test"][first_cols])[:, 1])),
+    }
+    is_fraud, exact = df.isFraud.to_numpy() == 1, (df.amount == df.oldbalanceOrg).to_numpy()
+    by_day = df.groupby(df.step // 24).isFraud.agg(["size", "sum"])
+    save_report("metrics.json", {
+        "results": results, "review_cost_sweep": sweep, "psi_train_vs_test": drift,
+        "first_attempt": first_attempt,
+        "signature": {"fraud": int(is_fraud.sum()), "fraud_equal": int((exact & is_fraud).sum()),
+                      "legit": int((~is_fraud).sum()), "legit_equal": int((exact & ~is_fraud).sum())},
+        "split": {k: {"steps": [int(p.step.min()), int(p.step.max())], "rows": len(p),
+                      "fraud": int(p.isFraud.sum())} for k, p in [("train", train), ("val", val), ("test", test)]},
+        "volume_by_day": [{"day": int(d), "legit": int(r["size"] - r["sum"]), "fraud": int(r["sum"])}
+                          for d, r in by_day.iterrows()],
+    })
+    curves = {}
+    for name, scores in {**{k: v.astype(float) for k, v in rules.items()}, **test_scores}.items():
+        prec, rec, _ = precision_recall_curve(y["test"], scores)
+        keep = np.unique(np.searchsorted(-rec, -np.linspace(1, 0, 200)).clip(0, len(rec) - 1))
+        curves[name] = {"recall": rec[keep].round(4).tolist(), "precision": prec[keep].round(4).tolist()}
+    save_report("curves.json", curves)
     plot_pr(test_scores, y["test"])
     print_table(results, sweep, drift, served)
 
@@ -177,7 +213,7 @@ def print_table(results, sweep, drift, served):
               f"| {r['precision']:.1%} | {r['recall']:.1%} | {r['fraud_amount_caught']:.1%} |")
     print("\n| Review cost | Threshold | Alerts | Precision | Recall | Fraud amount caught |")
     print("|---|---|---|---|---|---|")
-    for r in sweep:
+    for r in (r for r in sweep if r["review_cost"] in (100, 1_000, 10_000, 100_000)):
         print(f"| {r['review_cost']:,} | {r['threshold']:.4f} | {r['alerts']:,} | {r['precision']:.1%} "
               f"| {r['recall']:.1%} | {r['fraud_amount_caught']:.1%} |")
     imp = sorted(zip(served.booster_.feature_name(), served.booster_.feature_importance("gain")),

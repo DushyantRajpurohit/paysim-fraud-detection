@@ -5,7 +5,6 @@
 Every decision here is made on rolling-origin folds that end before the test
 period; the test set is only scored by fraud.train.
 """
-import json
 
 import numpy as np
 import pandas as pd
@@ -13,7 +12,7 @@ import lightgbm as lgb
 from sklearn.metrics import average_precision_score
 
 from fraud import features, metrics
-from fraud.train import REPORTS, load
+from fraud.train import load, save_report
 
 # Train on everything before `a`, evaluate on (a, b]. All end at 85%, where test starts.
 FOLDS = [(0.40, 0.55), (0.55, 0.70), (0.70, 0.85)]
@@ -82,8 +81,7 @@ def main():
             out["tuning"][key] = {"fold_ap": aps, "mean": round(float(np.mean(aps)), 3)}
             print(f"{key:28} folds {aps}  mean {np.mean(aps):.3f}")
 
-    REPORTS.mkdir(exist_ok=True)
-    (REPORTS / "experiments.json").write_text(json.dumps(out, indent=2))
+    save_report("experiments.json", out)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Fraud Model That Learned One Line</title>
+<meta name="description" content="My fraud model scored 0.98 on PaySim. One line of code scored 0.975. How I found the shortcut, took it away, and built an honest model, by Dushyant Rajpurohit.">
+<meta property="og:title" content="The fraud model that learned one line">
+<meta property="og:description" content="PaySim fraud can be caught with amount == oldbalanceOrg. Here's what is left when you take that away.">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;700&family=Patrick+Hand+SC&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="zine.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='55' r='32' fill='%23fff8e8' stroke='%23111' stroke-width='6'/%3E%3Ccircle cx='39' cy='52' r='6'/%3E%3Ccircle cx='61' cy='52' r='6'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- the mascot, in four moods -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="m-head">
+      <path d="M50 20c-18 1-31 15-31 34 0 19 14 33 32 33 18-1 31-15 30-34-1-19-14-34-31-33z" fill="#fffdf6" stroke="#111" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M22 70c4 10 14 18 28 18" fill="none" stroke="#2dd4bf" stroke-width="5" stroke-linecap="round"/>
+      <path d="M41 21l-4-12M50 19l1-13M59 21l5-11" stroke="#111" stroke-width="3.2" stroke-linecap="round"/>
+    </g>
+    <g id="m-eyes">
+      <circle cx="40" cy="50" r="8.5" fill="#fff" stroke="#111" stroke-width="3"/>
+      <circle cx="61" cy="50" r="8.5" fill="#fff" stroke="#111" stroke-width="3"/>
+    </g>
+  </defs>
+  <symbol id="m-curious" viewBox="0 0 100 100">
+    <use href="#m-head"/><use href="#m-eyes"/>
+    <circle cx="42" cy="51" r="3.4" fill="#111"/><circle cx="63" cy="51" r="3.4" fill="#111"/>
+    <circle cx="51" cy="71" r="4.5" fill="none" stroke="#111" stroke-width="3"/>
+  </symbol>
+  <symbol id="m-gotcha" viewBox="0 0 100 100">
+    <use href="#m-head"/><use href="#m-eyes"/>
+    <circle cx="43" cy="49" r="3.4" fill="#111"/><circle cx="64" cy="49" r="3.4" fill="#111"/>
+    <path d="M37 66c6 10 21 10 27 0z" fill="#ff6fae" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M86 30l7-6M89 42l9-1M84 19l3-9" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="m-worried" viewBox="0 0 100 100">
+    <use href="#m-head"/><use href="#m-eyes"/>
+    <circle cx="40" cy="53" r="3.4" fill="#111"/><circle cx="61" cy="53" r="3.4" fill="#111"/>
+    <path d="M38 72c4-4 8 3 12-1s8 3 12-1" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+    <path d="M79 38c3 5 3 9 0 10-3-1-3-5 0-10z" fill="#2dd4bf" stroke="#111" stroke-width="2"/>
+  </symbol>
+  <symbol id="m-happy" viewBox="0 0 100 100">
+    <use href="#m-head"/>
+    <path d="M32 51c3-6 13-6 16 0M53 51c3-6 13-6 16 0" fill="none" stroke="#111" stroke-width="3.2" stroke-linecap="round"/>
+    <path d="M38 66c5 8 20 8 25 0" fill="none" stroke="#111" stroke-width="3.2" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<div class="layout">
+  <nav class="rail" aria-label="Contents">
+    <a class="brand" href="#top">
+      <svg aria-hidden="true"><use href="#m-curious"/></svg>
+      <span class="brand-name">The Fraud Zine<span>PaySim, uncovered</span></span>
+    </a>
+    <button class="toc-toggle" type="button" aria-expanded="false" aria-controls="toc">Contents</button>
+    <ol class="toc" id="toc">
+      <li><a href="#score"><span>1</span>The too-good score</a></li>
+      <li><a href="#data"><span>2</span>What’s in the data</a></li>
+      <li><a href="#trick"><span>3</span>The trick</a></li>
+      <li><a href="#honest"><span>4</span>Taking it away</a></li>
+      <li><a href="#properly"><span>5</span>Doing it properly</a></li>
+      <li><a href="#threshold"><span>6</span>Where to draw the line</a></li>
+      <li><a href="#try"><span>7</span>Try it</a></li>
+      <li><a href="#limits"><span>8</span>What this isn’t</a></li>
+    </ol>
+    <p class="rail-note">By Dushyant Rajpurohit<br><a href="https://github.com/DushyantRajpurohit/paysim-fraud-detection">Code on GitHub</a></p>
+  </nav>
+
+  <main class="main" id="top">
+    <div class="topbar">
+      <a class="btn" href="https://github.com/DushyantRajpurohit/paysim-fraud-detection"><span>Code on GitHub</span></a>
+      <a class="btn primary" href="#try"><span>Try the model</span></a>
+    </div>
+
+    <section class="hero" aria-labelledby="title">
+      <div>
+        <h1 id="title">My fraud model scored <span class="num" data-v="first.pr2">0.98</span>.<br><span class="hl p">One line</span> of code scored <span class="num" data-v="rule.pr">0.975</span>.</h1>
+        <p class="dek">I built a fraud detector on PaySim, the dataset most fraud projects use. It looked brilliant. Then I found the one comparison it was really making, took it away, and measured what was left.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#score"><span>Read how I found it</span><svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="btn" href="#try"><span>Try the honest model</span></a>
+        </div>
+        <p class="byline">by Dushyant Rajpurohit</p>
+      </div>
+      <div class="reveal-card">
+        <div class="codecard" id="codecard">
+          <div class="file"><span>fraud_detector.py</span><span class="dots" aria-hidden="true"><i style="background:#ff6fae"></i><i style="background:#ffe84d"></i><i style="background:#2dd4bf"></i></span></div>
+<pre><span class="ln">1</span>def is_fraud(tx):
+<span class="ln">2</span>    return <span class="hit" id="hit">tx.amount == tx.oldbalanceOrg</span>
+<span class="ln">3</span>
+<span class="ln">4</span><span style="color:#5d564c"># PR-AUC on unseen hours: <span data-v="rule.pr">0.975</span></span></pre>
+        </div>
+        <p class="callout" id="callout">this line does all the work!</p>
+        <svg class="hero-mascot" role="img" aria-label="The zine's mascot, grinning: gotcha"><use href="#m-gotcha"/></svg>
+        <svg class="doodle" id="hero-arrow" aria-hidden="true"></svg>
+      </div>
+    </section>
+
+    <section class="chapter" id="score" aria-labelledby="h-score">
+      <header><h2 id="h-score"><span class="n">1</span>The too-good score</h2></header>
+      <div class="prose">
+        <p>PaySim is a simulator of mobile-money transfers: <strong>6,362,620 transactions</strong>, <strong>8,213</strong> of them fraud. I trained LightGBM on everything a payment system knows <em>before</em> money moves (the amount, the balances, the hour, the destination account's history) and scored it on the last 15% of hours, which it had never seen.</p>
+        <p>I report PR-AUC (the area under the precision-recall curve) because fraud here is rare, about 3 in every 1,000 transfers. Accuracy would read 99.7% for a model that flags nothing at all; PR-AUC only rewards finding the fraud.</p>
+        <p>My first model scored <span class="hl y"><strong data-v="first.pr3">0.980</strong> PR-AUC</span>. Then I opened the saved model to see what it had learned. Early stopping had kept <strong data-v="first.trees">1 tree</strong>.</p>
+        <p>A model that good with that little inside it isn't detecting fraud. It's applying a rule. So I went looking for the rule.</p>
+      </div>
+    </section>
+
+    <section class="chapter" id="data" aria-labelledby="h-data">
+      <header><h2 id="h-data"><span class="n">2</span>What’s in the data</h2></header>
+      <div class="prose">
+        <p>Two things stood out before any modelling. First, <strong>fraud only ever happens in two of the five transaction types</strong>, transfers and cash-outs. The other three never contain a single fraud, so the model doesn't score them at all.</p>
+        <p>Second, the simulation isn't stable over time. Fraud arrives at a steady rate, but ordinary traffic collapses a little past halfway.</p>
+      </div>
+      <figure>
+        <svg class="chart" id="volume-chart" viewBox="0 0 960 420" role="img" aria-labelledby="volume-title volume-desc">
+          <title id="volume-title">Transfers and cash-outs per day, legitimate versus fraud</title>
+          <desc id="volume-desc">Legitimate volume per day across the 31 simulated days, with fraud per day underneath. Legitimate volume falls sharply after day 16 while fraud stays roughly flat.</desc>
+        </svg>
+        <figcaption id="volume-caption">Each bar is one simulated day. The shaded bands are how I split the data by time: train, validation, test.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>That's why I split by time instead of at random. Training covers hours <span data-v="split.train">1–323</span>, validation <span data-v="split.val">324–377</span>, and the test set <span data-v="split.test">378–743</span>. The fraud rate goes from <strong data-v="split.trainRate">0.19%</strong> in training to <strong data-v="split.testRate">0.98%</strong> in test. A random split would have hidden that shift; a real payment system lives with it.</p>
+      </div>
+    </section>
+
+    <section class="chapter" id="trick" aria-labelledby="h-trick">
+      <header><h2 id="h-trick"><span class="n">3</span>The trick</h2></header>
+      <div class="prose">
+        <p>PaySim's fraudster always takes everything. In <span class="hl p"><strong data-v="sig.fraudPct">97.8%</strong> of frauds</span>, the amount equals the origin account's balance to the last unit. Among <span data-v="sig.legitM">2.76 million</span> legitimate transfers and cash-outs, that happens <strong data-v="sig.legitEqual">not once</strong>.</p>
+        <p>Here are 100 frauds and 100 legitimate transactions in the same proportions. Apply the one line and watch what it catches.</p>
+      </div>
+      <div class="trick" id="trickfield">
+        <div class="field">
+          <h3>100 frauds</h3>
+          <div class="dots" id="dots-fraud" aria-hidden="true"></div>
+          <p class="tally" id="tally-fraud" aria-live="polite">Not checked yet.</p>
+        </div>
+        <div class="field">
+          <h3>100 legitimate transactions</h3>
+          <div class="dots" id="dots-legit" aria-hidden="true"></div>
+          <p class="tally" id="tally-legit" aria-live="polite">Not checked yet.</p>
+        </div>
+        <div class="switch-row">
+          <button class="btn primary" type="button" id="apply" aria-pressed="false"><span>Apply the line</span></button>
+          <code>amount == oldbalanceOrg</code>
+        </div>
+      </div>
+      <div class="prose">
+        <p>On its own, that comparison scores <span class="hl y"><strong data-v="rule.pr">0.975</strong> PR-AUC</span>. Every feature that shows the model the origin balance lets it rediscover the same comparison, which is exactly what my one-tree model did. So a 0.99 on PaySim tells you very little: one comparison gets you almost all the way there.</p>
+        <p>Real fraud doesn't empty accounts this tidily. A model that learns this rule has learned PaySim.</p>
+      </div>
+    </section>
+
+    <section class="chapter" id="honest" aria-labelledby="h-honest">
+      <header><h2 id="h-honest"><span class="n">4</span>Taking it away</h2></header>
+      <div class="prose">
+        <p>So the model I serve never sees the origin balance: no <code>oldbalanceOrg</code>, no amount-to-balance ratio, no "empties the account" flag. What's left is the amount, the hour, the transfer type, and the destination's side: its balance and how much it has received before.</p>
+        <p>The honest number is <span class="hl t"><strong data-v="served.pr">0.634</strong> PR-AUC</span>. At my default threshold it catches <strong data-v="served.recall">77.0%</strong> of frauds and <strong data-v="served.amount">96.4%</strong> of the money involved, because large frauds score higher than small ones.</p>
+      </div>
+      <figure>
+        <svg class="chart" id="pr-chart" viewBox="0 0 960 520" role="img" aria-labelledby="pr-title pr-desc">
+          <title id="pr-title">Precision-recall curves on the test set</title>
+          <desc id="pr-desc">The one-line rule and the models that can see the origin balance sit near the top right. The served signature-free model is the honest curve below them, well above logistic regression.</desc>
+        </svg>
+        <figcaption>Test set, last 15% of hours. Pink is the one line, grey are models that can see the origin balance or the balances after payment, and teal is the model I serve.</figcaption>
+      </figure>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Model</th><th scope="col" class="num">PR-AUC</th><th scope="col" class="num">Alerts</th><th scope="col" class="num">Precision</th><th scope="col" class="num">Recall</th><th scope="col" class="num">Fraud money caught</th></tr></thead>
+          <tbody id="results-body">
+            <tr><td>PaySim's built-in rule (transfer &gt; 200k)</td><td class="num">0.013</td><td class="num">13</td><td class="num">100.0%</td><td class="num">0.3%</td><td class="num">1.1%</td></tr>
+            <tr class="trick"><td>One line: <code>amount == oldbalanceOrg</code></td><td class="num">0.975</td><td class="num">3,909</td><td class="num">100.0%</td><td class="num">97.5%</td><td class="num">84.2%</td></tr>
+            <tr><td>LightGBM, all pre-transaction features</td><td class="num">0.989</td><td class="num">4,747</td><td class="num">84.3%</td><td class="num">99.8%</td><td class="num">100.0%</td></tr>
+            <tr><td>LightGBM, + post-transaction balances</td><td class="num">0.999</td><td class="num">3,982</td><td class="num">99.9%</td><td class="num">99.3%</td><td class="num">97.2%</td></tr>
+            <tr><td>Logistic regression, signature-free</td><td class="num">0.294</td><td class="num">10,249</td><td class="num">18.0%</td><td class="num">46.1%</td><td class="num">62.2%</td></tr>
+            <tr class="served"><td>LightGBM, signature-free (served)</td><td class="num">0.634</td><td class="num">10,487</td><td class="num">29.4%</td><td class="num">77.0%</td><td class="num">96.4%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <aside class="setaside" aria-labelledby="sa-leak">
+        <svg class="face" aria-hidden="true"><use href="#m-worried"/></svg>
+        <h3 id="sa-leak">Set aside: the balances after the payment</h3>
+        <p>Adding the post-transaction balances pushes the score to <span data-v="leaky.pr">0.999</span>. But a payment system has to decide <em>before</em> money moves, when those balances don't exist yet. I trained that model only to show the size of the leak.</p>
+      </aside>
+    </section>
+
+    <section class="chapter" id="properly" aria-labelledby="h-properly">
+      <header><h2 id="h-properly"><span class="n">5</span>Doing it properly</h2></header>
+      <div class="prose">
+        <p>Once the shortcut was gone, every choice had to be earned. I made each one on three <strong>rolling time windows</strong>: train on everything before a cut-off, score the next window, all of them ending before the test period begins. The test set only gets scored once, at the end.</p>
+      </div>
+      <figure>
+        <svg class="chart" id="folds-chart" viewBox="0 0 960 470" role="img" aria-labelledby="folds-title folds-desc">
+          <title id="folds-title">Mean average precision across three rolling windows, for each candidate</title>
+          <desc id="folds-desc">Adding destination history lifts the mean; requiring at least 1,000 rows per leaf lifts it further. The hours-since-last-payment feature scores higher but is rejected for drift.</desc>
+        </svg>
+        <figcaption>Each row's tick is the mean over three windows; the small dots are the windows themselves.</figcaption>
+      </figure>
+      <div class="prose">
+        <p>Two changes held up: adding the destination's history (how much it has received before, and how this payment compares with its usual), and <span class="hl t">requiring at least 1,000 transactions in every leaf of every tree</span>. Bigger, looser trees chase patterns that only exist in particular hours.</p>
+      </div>
+      <aside class="setaside" aria-labelledby="sa-drift">
+        <svg class="face" aria-hidden="true"><use href="#m-worried"/></svg>
+        <h3 id="sa-drift">Set aside: "hours since the account last got paid"</h3>
+        <p>It scored better on the windows (<span data-v="exp.hoursMean">0.458</span>). It also drifts badly: as the simulation runs, accounts go longer between payments, so the test period shows values training never saw (drift score <span data-v="exp.hoursPsi">0.967</span>, where anything above 0.25 counts as drifted). <strong>I only noticed because my test score dropped</strong> when I added it, and looking at the test set is exactly what you're not supposed to do. So I turned the lesson into a rule that needs no labels: drift on recent traffic can always be measured, and any feature past 0.25 is out, whatever its validation score.</p>
+      </aside>
+    </section>
+
+    <section class="chapter" id="threshold" aria-labelledby="h-threshold">
+      <header><h2 id="h-threshold"><span class="n">6</span>Where to draw the line</h2></header>
+      <div class="prose">
+        <p>A model gives a score; a business decides what to do with it. A missed fraud costs its full amount. A false alarm costs an analyst's time. I pick the threshold that makes the total cost smallest on the validation days, then report what it does on the test days.</p>
+        <p>Drag the cost of one review and watch the trade-off move.</p>
+      </div>
+      <div class="slider">
+        <label for="cost">Cost of reviewing one alert: <output id="cost-out" for="cost">10,000</output></label>
+        <input type="range" id="cost" min="0" max="30" step="1" value="15" aria-describedby="readout">
+      </div>
+      <p class="readout" id="readout" aria-live="polite">At a review cost of <b>10,000</b>, I'd send <b>10,487</b> transactions to review. <b>29.4%</b> of them are fraud, and they hold <b>96.4%</b> of the stolen money.</p>
+      <figure>
+        <svg class="chart" id="cost-chart" viewBox="0 0 960 150" role="img" aria-labelledby="cost-title">
+          <title id="cost-title">Share of frauds and of fraud money caught at the chosen review cost</title>
+        </svg>
+      </figure>
+    </section>
+
+    <section class="chapter" id="try" aria-labelledby="h-try">
+      <header><h2 id="h-try"><span class="n">7</span>Try it</h2></header>
+      <div class="prose">
+        <p>This is the served model, running live. The presets are real transactions from the test set, including a fraud it misses and a legitimate payment it flags. Every decision comes with the three features that pushed it hardest, as exact SHAP values.</p>
+      </div>
+      <div class="scorer">
+        <div>
+          <div class="presets" id="presets" role="group" aria-label="Real test-set transactions"></div>
+          <form class="form" id="score-form">
+            <label class="full">Type
+              <select name="type"><option>TRANSFER</option><option>CASH_OUT</option><option>PAYMENT</option><option>CASH_IN</option><option>DEBIT</option></select>
+            </label>
+            <label>Amount<input name="amount" type="number" min="0" step="any" required></label>
+            <label>Hour (1–743)<input name="step" type="number" min="1" max="743" step="1" required></label>
+            <label>Origin balance before<input name="oldbalanceOrg" type="number" min="0" step="any" required></label>
+            <label>Destination balance before<input name="oldbalanceDest" type="number" min="0" step="any" required></label>
+            <label>Destination's earlier payments<input name="dest_prior_txns" type="number" min="0" step="1" required></label>
+            <label>Destination's earlier total<input name="dest_prior_amount" type="number" min="0" step="any" required></label>
+            <div class="full"><button class="btn primary" type="submit" id="score-btn"><span>Score it</span></button></div>
+          </form>
+        </div>
+        <div class="result" id="result" aria-live="polite">
+          <svg class="face" id="result-face" aria-hidden="true"><use href="#m-curious"/></svg>
+          <p class="verdict" id="verdict">Pick a transaction</p>
+          <p class="meta" id="result-meta">Choose a preset or type your own, then score it.</p>
+          <p class="msg" id="result-msg">The model is hosted for free, so it naps when nobody's around. The first score can take up to a minute while it wakes up.</p>
+          <svg class="chart reasons" id="reasons" viewBox="0 0 440 170" aria-hidden="true"></svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="limits" aria-labelledby="h-limits">
+      <header><h2 id="h-limits"><span class="n">8</span>What this isn’t</h2></header>
+      <div class="closing">
+        <div>
+          <h3>Limits, plainly</h3>
+          <ul>
+            <li><strong>PaySim is synthetic.</strong> The lesson is about the dataset. 0.634 is the honest number for PaySim, not a claim about real payments.</li>
+            <li><strong>Destination history is passed in by the caller.</strong> In production it would come from a feature store.</li>
+            <li><strong>The review cost is an assumption.</strong> That's why the slider exists instead of one number.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Check my work</h3>
+          <ul>
+            <li><a href="https://github.com/DushyantRajpurohit/paysim-fraud-detection">The code and README</a>, with tests passing in CI</li>
+            <li><a href="https://github.com/DushyantRajpurohit/paysim-fraud-detection/blob/main/fraud/experiments.py"><code>fraud/experiments.py</code></a> reproduces every decision above</li>
+            <li><a href="https://paysim-fraud-detection-591g.onrender.com/docs">The scoring API's docs</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="signoff"><svg aria-hidden="true"><use href="#m-happy"/></svg><span>Thanks for reading. Every number on this page is loaded from files the training pipeline writes. Made by Dushyant Rajpurohit.</span></p>
+    </section>
+  </main>
+</div>
+
+<script src="vendor/rough.js"></script>
+<script src="zine.js"></script>
+</body>
+</html>
