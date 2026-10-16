@@ -139,7 +139,7 @@ POST /score
   of a batch against a training sample (>0.25 is flagged), **`GET /health`**,
   and OpenAPI docs at `/docs`.
 - **`Dockerfile`** builds a serving-only image (no training dependencies) on
-  port 7860, ready for a Hugging Face Space.
+  `$PORT` (default 7860), so it runs on Render or any container host.
 
 ## Run it
 

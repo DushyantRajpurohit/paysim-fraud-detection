@@ -1,4 +1,4 @@
-# Serving image (Hugging Face Spaces runs it on port 7860).
+# Serving image. Listens on $PORT when the host sets one (Render does), else 7860.
 FROM python:3.14-slim
 
 # LightGBM needs OpenMP at runtime.
@@ -17,4 +17,4 @@ COPY --chown=app static/ static/
 USER app
 
 EXPOSE 7860
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD uvicorn app:app --host 0.0.0.0 --port ${PORT:-7860}
