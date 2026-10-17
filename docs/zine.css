@@ -220,7 +220,8 @@ tr.shortcut td { background: rgba(255, 111, 174, 0.16); }
 .verdict { font: 400 2rem/1.1 var(--marker); margin: 0 0 0.3rem; }
 .verdict.review { color: var(--pink-ink); }
 .verdict.approve { color: var(--teal-ink); }
-.result .meta { font: 400 0.92rem/1.4 var(--mono); color: var(--ink-soft); margin: 0 0 1rem; }
+.result .meta { font: 400 1.05rem/1.35 var(--hand); color: var(--ink-soft); margin: 0 0 1rem; }
+.result .meta.data { font: 400 0.92rem/1.4 var(--mono); }
 .result .msg { font-size: 1rem; color: var(--ink-soft); }
 .reasons { clear: both; }
 .reasons:empty { display: none; }

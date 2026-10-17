@@ -335,8 +335,8 @@
       field.classList.toggle("applied", on);
       btn.setAttribute("aria-pressed", String(on));
       btn.querySelector("span").textContent = on ? "Undo" : "Apply the line";
-      tF.innerHTML = on ? `<b>${fraudHits}</b> of 100 caught by one comparison.` : "Not checked yet.";
-      tL.innerHTML = on ? `<b>${legitHits}</b> of 100 flagged. Across all ${(s.legit / 1e6).toFixed(2)} million: ${s.legit_equal === 0 ? "not one" : fmt.n(s.legit_equal)}.` : "Not checked yet.";
+      tF.innerHTML = on ? `<b>${fraudHits}</b> of <span class="fig">100</span> caught by one comparison.` : "Not checked yet.";
+      tL.innerHTML = on ? `<b>${legitHits}</b> of <span class="fig">100</span> flagged. Across all <span class="fig">${(s.legit / 1e6).toFixed(2)}</span> million: ${s.legit_equal === 0 ? "not one" : `<span class="fig">${fmt.n(s.legit_equal)}</span>`}.` : "Not checked yet.";
     });
   }
 
@@ -387,7 +387,7 @@
       const tx = Object.fromEntries(new FormData(form));
       for (const k of Object.keys(tx)) if (k !== "type") tx[k] = Number(tx[k]);
       btn.disabled = true; setFace("curious");
-      verdict.className = "verdict"; verdict.textContent = "Scoring…"; meta.textContent = ""; clear(reasons);
+      verdict.className = "verdict"; verdict.textContent = "Scoring…"; meta.textContent = ""; meta.className = "meta"; clear(reasons);
       msg.textContent = "";
       const slow = setTimeout(() => { setFace("worried"); msg.textContent = "Waking the model up. Free hosting naps when nobody's around; this takes up to a minute the first time."; }, 2500);
       const ctl = new AbortController(), timeout = setTimeout(() => ctl.abort(), 90000);
@@ -409,6 +409,7 @@
         setFace(review ? "gotcha" : "happy");
         verdict.className = `verdict ${review ? "review" : "approve"}`;
         verdict.textContent = review ? "Send to review" : "Approve";
+        meta.className = "meta data";
         meta.textContent = `score ${body.score.toFixed(4)} · threshold ${body.threshold.toFixed(4)}`;
         msg.textContent = "What pushed it, in log-odds: pink toward review, teal toward approve.";
         drawReasons(body.reasons);
