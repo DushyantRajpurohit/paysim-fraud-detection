@@ -62,7 +62,7 @@ a:hover { text-decoration-color: var(--pink); }
 }
 .toc a span { font-family: var(--marker); font-size: 0.95rem; color: var(--ink-faint); }
 .toc a:hover { color: var(--ink); background: rgba(255, 232, 77, 0.45); }
-.toc a[aria-current="true"] { color: var(--ink); background: var(--pink); }
+.toc a[aria-current="true"] { color: var(--ink); background: var(--yellow); }
 .toc a[aria-current="true"] span { color: var(--ink); }
 
 .rail-note { margin-top: auto; font: 400 1rem/1.35 var(--hand); color: var(--ink-soft); }

@@ -371,11 +371,11 @@
     const drawReasons = (rs) => {
       clear(reasons);
       if (!rs.length) return;
-      const W = 440, mid = 230, max = Math.max(...rs.map((r) => Math.abs(r.contribution)), 1e-9), g = rc(reasons);
+      const W = 440, mid = 200, max = Math.max(...rs.map((r) => Math.abs(r.contribution)), 1e-9), g = rc(reasons);
       reasons.setAttribute("viewBox", `0 0 ${W} 170`);
       reasons.appendChild(g.line(mid, 6, mid, 160, { stroke: C.ink, strokeWidth: 1.6, roughness: 0.6, seed: 700 }));
       rs.forEach((r, i) => {
-        const y = 14 + i * 50, w = (Math.abs(r.contribution) / max) * 190, up = r.contribution > 0;
+        const y = 14 + i * 50, w = (Math.abs(r.contribution) / max) * 150, up = r.contribution > 0;
         reasons.appendChild(g.rectangle(up ? mid : mid - w, y + 16, w, 18, { stroke: C.ink, strokeWidth: 1.3, fill: up ? C.pink : C.teal, fillStyle: "solid", roughness: 0.8, seed: 710 + i }));
         text(reasons, up ? mid - 8 : mid + 8, y + 11, FEATURE_NAMES[r.feature] || r.feature, "tick", up ? "end" : "start");
         text(reasons, up ? mid + w + 6 : mid - w - 6, y + 30, (up ? "+" : "") + r.contribution.toFixed(2), "tick", up ? "start" : "end");
