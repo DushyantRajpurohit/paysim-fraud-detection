@@ -88,6 +88,10 @@
     const rail = document.querySelector(".rail");
     const svg = el("svg", { class: "rail-line", "aria-hidden": "true", preserveAspectRatio: "none", viewBox: "0 0 6 1000" }, rail);
     svg.appendChild(rc(svg).linearPath([[3, 0], [2, 260], [4, 520], [2.5, 780], [3, 1000]], { stroke: C.ink, strokeWidth: 2.4, roughness: 0.6, seed: 77 }));
+    // on small screens the rail is a top strip; its bottom edge is drawn too
+    const base = el("svg", { class: "rail-base", "aria-hidden": "true", preserveAspectRatio: "none", viewBox: "0 0 1000 6" }, rail);
+    base.appendChild(rc(base).linearPath([[0, 3], [260, 2], [520, 4], [780, 2.5], [1000, 3]], { stroke: C.ink, strokeWidth: 2.4, roughness: 0.6, seed: 78 }));
+    sketchOutline(document.querySelector(".toc-toggle"), { seed: 79, width: 2 });
   })();
 
   // the hero's doodled arrow, from the callout to the line that does the work

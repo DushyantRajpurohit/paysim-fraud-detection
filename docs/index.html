@@ -21,7 +21,7 @@
   <defs>
     <g id="m-head">
       <path d="M50 20c-18 1-31 15-31 34 0 19 14 33 32 33 18-1 31-15 30-34-1-19-14-34-31-33z" fill="#fffdf6" stroke="#111" stroke-width="3.2" stroke-linecap="round"/>
-      <path d="M22 70c4 10 14 18 28 18" fill="none" stroke="#2dd4bf" stroke-width="5" stroke-linecap="round"/>
+      <path d="M22 70c4 10 14 18 28 18" fill="none" stroke="#b5ab9b" stroke-width="5" stroke-linecap="round"/>
       <path d="M41 21l-4-12M50 19l1-13M59 21l5-11" stroke="#111" stroke-width="3.2" stroke-linecap="round"/>
     </g>
     <g id="m-eyes">
@@ -44,7 +44,7 @@
     <use href="#m-head"/><use href="#m-eyes"/>
     <circle cx="40" cy="53" r="3.4" fill="#111"/><circle cx="61" cy="53" r="3.4" fill="#111"/>
     <path d="M38 72c4-4 8 3 12-1s8 3 12-1" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
-    <path d="M79 38c3 5 3 9 0 10-3-1-3-5 0-10z" fill="#2dd4bf" stroke="#111" stroke-width="2"/>
+    <path d="M79 38c3 5 3 9 0 10-3-1-3-5 0-10z" fill="#fffdf6" stroke="#111" stroke-width="2"/>
   </symbol>
   <symbol id="m-happy" viewBox="0 0 100 100">
     <use href="#m-head"/>
@@ -91,11 +91,11 @@
       </div>
       <div class="reveal-card">
         <div class="codecard" id="codecard">
-          <div class="file"><span>fraud_detector.py</span><span class="dots" aria-hidden="true"><i style="background:#ff6fae"></i><i style="background:#ffe84d"></i><i style="background:#2dd4bf"></i></span></div>
+          <div class="file"><span>fraud_detector.py</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
 <pre><span class="ln">1</span>def is_fraud(tx):
 <span class="ln">2</span>    return <span class="hit" id="hit">tx.amount == tx.oldbalanceOrg</span>
 <span class="ln">3</span>
-<span class="ln">4</span><span id="c4" style="color:#5d564c"># PR-AUC on unseen hours: <span data-v="rule.pr">0.975</span></span></pre>
+<span class="ln">4</span><span id="c4" class="cm"># PR-AUC on unseen hours: <span data-v="rule.pr">0.975</span></span></pre>
         </div>
         <p class="callout" id="callout">this line does all the work!</p>
         <svg class="hero-mascot" role="img" aria-label="The zine's mascot, grinning: gotcha"><use href="#m-gotcha"/></svg>

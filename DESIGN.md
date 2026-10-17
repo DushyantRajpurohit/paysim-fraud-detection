@@ -207,7 +207,7 @@ Hand-lettered labels in sketched frames that tip slightly when you reach for the
 - **State:** hover and `aria-pressed="true"` fill yellow.
 
 ### Cards / Containers
-- **Code card:** paper-light sheet, 10px fill radius, rough 2.4px frame, tilted 1.6deg, a filename row in mono, line numbers in ink faint, the key expression in a yellow hit.
+- **Code card:** paper-light sheet, 10px fill radius, rough 2.4px frame, tilted 1.6deg, a filename row in mono with three hollow ink-faint window dots, line numbers and comments in ink faint, the key expression in a yellow hit.
 - **Set-aside note:** a rough-framed aside hanging under the chapter that rejected the idea, tilted -0.6deg, mascot face at left, pink-ink title.
 - **Result panel:** rough frame, marker verdict (pink ink for review, teal ink for approve), mascot mood floated right, SHAP bars below.
 
@@ -218,14 +218,14 @@ Hand-lettered labels in sketched frames that tip slightly when you reach for the
 
 ### Navigation
 - **Contents rail:** numbered list in Patrick Hand SC ink soft with marker numerals in ink faint; hover gets a 45% yellow wash, the reader's current chapter a full yellow fill (`aria-current`).
-- **Mobile:** sticky top strip on paper with an ink bottom rule and a yellow toggle; the list drops below it.
+- **Mobile:** sticky top strip on paper with a drawn ink bottom line and a yellow, rough-framed toggle; the list drops below it.
 - **Links:** ink text with a 3px teal underline, offset 4px, turning pink on hover.
 
 ### Highlighter Swipe (signature)
 Inline emphasis as a ragged marker shape: yellow at 90%, pink at 75%, teal at 70% opacity. It sweeps from 0 to full width over 0.9s when its chapter enters the viewport, and is already drawn in the hero and under reduced motion.
 
 ### Mascot (signature)
-Four inline SVG moods, used as the narrator's reaction: curious (brand), gotcha (the trick), worried (set-asides, risky scores), happy (approve, sign-off). Accessible names state the mood when meaningful; otherwise hidden.
+Four inline SVG moods, used as the narrator's reaction: curious (brand), gotcha (the trick), worried (set-asides, risky scores), happy (approve, sign-off). Ink line work on paper-light with a pencil-grey cheek arc; the gotcha grin is the only highlighter in it, because it marks the trick. Accessible names state the mood when meaningful; otherwise hidden.
 
 ### Charts
 Rough.js on SVG: ink axes, pencil-grey hachured context bars, ink-soft dashed guides, highlighter series by the Fixed Meaning Rule, Patrick Hand SC labels, mono numbers. Paths draw on over 1.2s when their chapter arrives.

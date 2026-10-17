@@ -48,6 +48,7 @@ a:hover { text-decoration-color: var(--pink); }
   display: flex; flex-direction: column; gap: 1.5rem;
 }
 .rail-line { position: absolute; top: 0; right: -3px; width: 6px; height: 100%; overflow: visible; pointer-events: none; }
+.rail-base { display: none; position: absolute; left: 0; bottom: -3px; width: 100%; height: 6px; overflow: visible; pointer-events: none; }
 .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
 .brand svg { width: 3.4rem; height: 3.4rem; flex: none; }
 .brand-name { font: 400 1.35rem/1.05 var(--marker); }
@@ -111,7 +112,8 @@ a:hover { text-decoration-color: var(--pink); }
   background: #fffdf6; border-radius: 10px;
 }
 .codecard .file { position: relative; display: flex; justify-content: space-between; font: 400 0.95rem var(--mono); color: var(--ink-soft); margin-bottom: 0.9rem; }
-.codecard .dots i { display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 50%; margin-left: 0.3rem; }
+.codecard .dots i { display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 50%; margin-left: 0.3rem; border: 1.6px solid var(--ink-faint); }
+.codecard .cm { color: var(--ink-faint); }
 .codecard pre { position: relative; margin: 0; font: 400 clamp(0.88rem, 1.15vw, 1.02rem)/1.9 var(--mono); white-space: pre-wrap; }
 .codecard .ln { color: var(--ink-faint); user-select: none; margin-right: 0.9rem; }
 .codecard .hit { background: var(--yellow); padding: 0.1rem 0.25rem; border-radius: 3px; font-weight: 700; white-space: nowrap; }
@@ -240,12 +242,12 @@ tr.shortcut td { background: rgba(255, 111, 174, 0.16); }
   .layout { grid-template-columns: 1fr; }
   .rail {
     position: sticky; top: 0; z-index: 10; height: auto; flex-direction: row; align-items: center; justify-content: space-between;
-    gap: 0.75rem; padding: 0.6rem 1rem; border-right: 0; border-bottom: 2.5px solid var(--ink); background: var(--paper);
+    gap: 0.75rem; padding: 0.6rem 1rem; background: var(--paper);
   }
   .brand svg { width: 2.4rem; height: 2.4rem; }
   .brand-name { font-size: 1.05rem; }
   .brand-name span { display: none; }
-  .toc-toggle { display: inline-flex; font: 400 1.1rem var(--hand); padding: 0.35rem 0.8rem; border: 2px solid var(--ink); border-radius: 8px; background: var(--yellow); color: var(--ink); cursor: pointer; }
+  .toc-toggle { display: inline-flex; font: 400 1.1rem var(--hand); padding: 0.4rem 0.85rem; border: 0; border-radius: 6px; background: var(--yellow); color: var(--ink); cursor: pointer; }
   .toc { display: none; position: absolute; top: 100%; left: 0; right: 0; padding: 0.75rem 1rem 1rem; background: var(--paper); border-bottom: 2.5px solid var(--ink); }
   .rail.open .toc { display: grid; }
   .rail-note { display: none; }
@@ -256,6 +258,7 @@ tr.shortcut td { background: rgba(255, 111, 174, 0.16); }
   .trick, .scorer { grid-template-columns: 1fr; }
   .setaside { margin-left: 0; }
   .rail-line { display: none; }
+  .rail-base { display: block; }
 }
 @media (max-width: 600px) {
   /* the comparison table stacks: one block per model, every number visible */
