@@ -95,7 +95,7 @@
 <pre><span class="ln">1</span>def is_fraud(tx):
 <span class="ln">2</span>    return <span class="hit" id="hit">tx.amount == tx.oldbalanceOrg</span>
 <span class="ln">3</span>
-<span class="ln">4</span><span style="color:#5d564c"># PR-AUC on unseen hours: <span data-v="rule.pr">0.975</span></span></pre>
+<span class="ln">4</span><span id="c4" style="color:#5d564c"># PR-AUC on unseen hours: <span data-v="rule.pr">0.975</span></span></pre>
         </div>
         <p class="callout" id="callout">this line does all the work!</p>
         <svg class="hero-mascot" role="img" aria-label="The zine's mascot, grinning: gotcha"><use href="#m-gotcha"/></svg>
@@ -138,6 +138,10 @@
         <p>Here are 100 frauds and 100 legitimate transactions in the same proportions. Apply the one line and watch what it catches.</p>
       </div>
       <div class="trick" id="trickfield">
+        <div class="switch-row">
+          <button class="btn primary" type="button" id="apply" aria-pressed="false"><span>Apply the line</span></button>
+          <code>amount == oldbalanceOrg</code>
+        </div>
         <div class="field">
           <h3>100 frauds</h3>
           <div class="dots" id="dots-fraud" aria-hidden="true"></div>
@@ -147,10 +151,6 @@
           <h3>100 legitimate transactions</h3>
           <div class="dots" id="dots-legit" aria-hidden="true"></div>
           <p class="tally" id="tally-legit" aria-live="polite">Not checked yet.</p>
-        </div>
-        <div class="switch-row">
-          <button class="btn primary" type="button" id="apply" aria-pressed="false"><span>Apply the line</span></button>
-          <code>amount == oldbalanceOrg</code>
         </div>
       </div>
       <div class="prose">
@@ -185,6 +185,7 @@
           </tbody>
         </table>
       </div>
+      <p class="prose">My one-tree first attempt (<span data-v="first.pr3">0.980</span>) isn't a separate row: it's the ancestor of "all pre-transaction features", the same idea before I added the destination's history and tuned the trees. <code>fraud/train.py</code> still reproduces it.</p>
       <aside class="setaside" aria-labelledby="sa-leak">
         <svg class="face" aria-hidden="true"><use href="#m-worried"/></svg>
         <h3 id="sa-leak">Set aside: the balances after the payment</h3>
@@ -222,7 +223,7 @@
       </div>
       <div class="slider">
         <label for="cost">Cost of reviewing one alert: <output id="cost-out" for="cost">10,000</output></label>
-        <input type="range" id="cost" min="0" max="30" step="1" value="15" aria-describedby="readout">
+        <div class="range"><svg id="range-art" aria-hidden="true"></svg><input type="range" id="cost" min="0" max="30" step="1" value="15" aria-describedby="readout"></div>
       </div>
       <p class="readout" id="readout" aria-live="polite">At a review cost of <b>10,000</b>, I'd send <b>10,487</b> transactions to review. <b>29.4%</b> of them are fraud, and they hold <b>96.4%</b> of the stolen money.</p>
       <figure>
@@ -245,7 +246,7 @@
               <select name="type"><option>TRANSFER</option><option>CASH_OUT</option><option>PAYMENT</option><option>CASH_IN</option><option>DEBIT</option></select>
             </label>
             <label>Amount<input name="amount" type="number" min="0" step="any" required></label>
-            <label>Hour (1–743)<input name="step" type="number" min="1" max="743" step="1" required></label>
+            <label><span>Hour <span class="fig">(1–743)</span></span><input name="step" type="number" min="1" max="743" step="1" required></label>
             <label>Origin balance before<input name="oldbalanceOrg" type="number" min="0" step="any" required></label>
             <label>Destination balance before<input name="oldbalanceDest" type="number" min="0" step="any" required></label>
             <label>Destination's earlier payments<input name="dest_prior_txns" type="number" min="0" step="1" required></label>

@@ -36,14 +36,26 @@
   };
   const text = (svg, x, y, str, cls = "tick", anchor = "start", extra = {}) => {
     const t = el("text", { x, y, class: cls, "text-anchor": anchor, ...extra }, svg);
-    t.textContent = str;
+    String(str).split(/(\d[\d.,]*%?)/).forEach((part, i) => {
+      if (!part) return;
+      if (i % 2) el("tspan", { class: "num" }, t).textContent = part;
+      else t.appendChild(document.createTextNode(part));
+    });
     return t;
+  };
+  // a drawn arrow, never a typed one
+  const arrow = (g, svg, x1, y1, x2, y2, color = C.ink, seed = 1) => {
+    const a = Math.atan2(y2 - y1, x2 - x1), h = 9;
+    svg.appendChild(g.line(x1, y1, x2, y2, { stroke: color, strokeWidth: 1.8, roughness: 0.7, seed }));
+    svg.appendChild(g.linearPath([[x2 - h * Math.cos(a - 0.5), y2 - h * Math.sin(a - 0.5)], [x2, y2],
+      [x2 - h * Math.cos(a + 0.5), y2 - h * Math.sin(a + 0.5)]], { stroke: color, strokeWidth: 1.8, roughness: 0.5, seed: seed + 1 }));
   };
   const clear = (svg) => { while (svg.lastChild && svg.lastChild.tagName !== "title" && svg.lastChild.tagName !== "desc") svg.removeChild(svg.lastChild); };
   const widthOf = (svg) => Math.max(340, Math.min(960, svg.parentElement.clientWidth || 960));
 
   // ---------- sketched outlines for boxes and buttons ----------
   function sketchOutline(host, opts = {}) {
+    host.classList.add("sketch-host");
     let svg = host.querySelector(":scope > svg.sketch");
     if (!svg) { svg = el("svg", { class: "sketch", "aria-hidden": "true" }); host.prepend(svg); }
     const draw = () => {
@@ -64,23 +76,33 @@
     document.querySelectorAll(sel).forEach((n, i) => sketchOutline(n, { seed: 21 + i, width: 2.4 })));
 
   // marker underline under every chapter heading
+  const UNDERLINE = { trick: C.pink, honest: C.teal, properly: C.teal, try: C.teal };
   document.querySelectorAll(".chapter h2").forEach((h, i) => {
     const svg = el("svg", { class: "underline", "aria-hidden": "true", preserveAspectRatio: "none", viewBox: "0 0 300 12" }, h);
-    svg.appendChild(rc(svg).curve([[2, 7], [90, 4], [200, 8], [298, 5]], { stroke: i % 2 ? C.pink : C.teal, strokeWidth: 4, roughness: 1.4, seed: 40 + i }));
+    const color = UNDERLINE[h.closest(".chapter").id] || C.ink;
+    svg.appendChild(rc(svg).curve([[2, 7], [90, 4], [200, 8], [298, 5]], { stroke: color, strokeWidth: color === C.ink ? 2.6 : 4, roughness: 1.4, seed: 40 + i }));
   });
+
+  // the rail's divider, drawn rather than ruled
+  (() => {
+    const rail = document.querySelector(".rail");
+    const svg = el("svg", { class: "rail-line", "aria-hidden": "true", preserveAspectRatio: "none", viewBox: "0 0 6 1000" }, rail);
+    svg.appendChild(rc(svg).linearPath([[3, 0], [2, 260], [4, 520], [2.5, 780], [3, 1000]], { stroke: C.ink, strokeWidth: 2.4, roughness: 0.6, seed: 77 }));
+  })();
 
   // the hero's doodled arrow, from the callout to the line that does the work
   function heroArrow() {
     const svg = document.getElementById("hero-arrow"), card = document.querySelector(".reveal-card");
     const hit = document.getElementById("hit").getBoundingClientRect(), call = document.getElementById("callout").getBoundingClientRect();
-    const box = card.getBoundingClientRect();
+    const c4 = document.getElementById("c4").getBoundingClientRect(), box = card.getBoundingClientRect();
     clear(svg);
     Object.assign(svg.style, { left: "0", top: "0", width: box.width + "px", height: box.height + "px" });
     svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
-    const sx = call.left - box.left + call.width * 0.45, sy = call.top - box.top + 4;
-    const ex = hit.left - box.left + hit.width * 0.7, ey = hit.bottom - box.top + 8;
+    // stay right of the comment line so the tail never strikes through it
+    const ex = Math.max(hit.right - box.left - 14, c4.right - box.left + 16), ey = hit.bottom - box.top + 6;
+    const sx = Math.max(call.right - box.left - 40, ex + 4), sy = call.top - box.top + 2;
     const g = rc(svg);
-    svg.appendChild(g.curve([[sx, sy], [sx + 20, (sy + ey) / 2 + 10], [ex + 8, ey + 18], [ex, ey]], { stroke: C.pinkInk, strokeWidth: 2.6, roughness: 1, seed: 5 }));
+    svg.appendChild(g.curve([[sx, sy], [sx + 6, (sy + ey) / 2 + 12], [ex + 4, ey + 16], [ex, ey]], { stroke: C.pinkInk, strokeWidth: 2.6, roughness: 1, seed: 5 }));
     svg.appendChild(g.linearPath([[ex - 11, ey + 9], [ex, ey], [ex + 11, ey + 10]], { stroke: C.pinkInk, strokeWidth: 2.6, roughness: 0.8, seed: 6 }));
   }
 
@@ -127,8 +149,9 @@
     ];
     document.getElementById("results-body").innerHTML = rows.map(([key, label, cls]) => {
       const r = byName[key];
-      return `<tr class="${cls}"><td>${label}</td><td class="num">${fmt.d3(r.pr_auc)}</td><td class="num">${fmt.n(r.alerts)}</td>` +
-        `<td class="num">${fmt.p1(r.precision)}</td><td class="num">${fmt.p1(r.recall)}</td><td class="num">${fmt.p1(r.fraud_amount_caught)}</td></tr>`;
+      return `<tr class="${cls}"><td>${label}</td><td class="num" data-label="PR-AUC">${fmt.d3(r.pr_auc)}</td>` +
+        `<td class="num" data-label="Alerts">${fmt.n(r.alerts)}</td><td class="num" data-label="Precision">${fmt.p1(r.precision)}</td>` +
+        `<td class="num" data-label="Recall">${fmt.p1(r.recall)}</td><td class="num" data-label="Fraud money caught">${fmt.p1(r.fraud_amount_caught)}</td></tr>`;
     }).join("");
   }
 
@@ -143,15 +166,16 @@
     const g = rc(svg);
     // the time split, as dashed fences
     const sp = m.split, x = (step) => L + (step / 24) * bw;
-    [[sp.val.steps[0], "validation", 16], [sp.test.steps[0], "test →", 38]].forEach(([s, label, ly], i) => {
+    [[sp.val.steps[0], "validation", 16], [sp.test.steps[0], "test", 38]].forEach(([s, label, ly], i) => {
       svg.appendChild(g.line(x(s), ly - 14, x(s), bot0 + botH + 4, { stroke: C.soft, strokeWidth: 1.6, strokeLineDash: [6, 6], roughness: 0.6, seed: 90 + i }));
       text(svg, x(s) + 6, ly, label, "lbl");
+      if (i === 1) arrow(g, svg, x(s) + 44, ly - 6, x(s) + 78, ly - 6, C.ink, 95);
     });
     text(svg, L + 4, 16, "train", "lbl");
     days.forEach((d, i) => {
       const h1 = (d.legit / maxL) * topH, h2 = (d.fraud / maxF) * botH, bx = L + i * bw + bw * 0.14, w = bw * 0.72;
       if (h1 > 1) svg.appendChild(g.rectangle(bx, top0 + topH - h1, w, h1, { stroke: C.ink, strokeWidth: 1.2, fill: C.grey, fillStyle: "hachure", hachureGap: 5, roughness: 0.9, seed: 100 + i }));
-      if (h2 > 1) svg.appendChild(g.rectangle(bx, bot0 + botH - h2, w, h2, { stroke: C.ink, strokeWidth: 1.2, fill: C.pink, fillStyle: "solid", roughness: 0.9, seed: 200 + i }));
+      if (h2 > 1) svg.appendChild(g.rectangle(bx, bot0 + botH - h2, w, h2, { stroke: C.ink, strokeWidth: 1.2, fill: C.soft, fillStyle: "cross-hatch", hachureGap: 4, roughness: 0.9, seed: 200 + i }));
     });
     svg.appendChild(g.line(L, top0 + topH, W - R, top0 + topH, { stroke: C.ink, strokeWidth: 2, roughness: 0.7, seed: 301 }));
     svg.appendChild(g.line(L, bot0 + botH, W - R, bot0 + botH, { stroke: C.ink, strokeWidth: 2, roughness: 0.7, seed: 302 }));
@@ -159,8 +183,8 @@
     text(svg, L - 8, bot0 + 10, fmt.n(maxF), "tick", "end");
     text(svg, L - 8, top0 + topH, "0", "tick", "end");
     text(svg, L - 8, bot0 + botH, "0", "tick", "end");
-    text(svg, W - R, top0 + 14, "legitimate per day", "lbl", "end");
-    text(svg, W - R, bot0 + 2, "fraud per day", "lbl", "end", { fill: C.pinkInk });
+    text(svg, W - R, top0 + topH - (small ? 34 : 56), "legitimate per day", "lbl", "end");
+    text(svg, W - R, bot0 + 2, "fraud per day", "lbl", "end");
     for (let i = 0; i < n; i += small ? 10 : 5) text(svg, L + i * bw + bw / 2, H - 18, `day ${i + 1}`, "tick", "middle");
 
     // caption from the data itself
@@ -202,7 +226,9 @@
       svg.appendChild(node);
       const lx = small ? 20 : L + plotW + 24, ly = small ? T + P + 84 + i * 30 : T + 30 + i * 46;
       svg.appendChild(g.line(lx, ly - 6, lx + 34, ly - 6, { ...opts, seed: 430 + i }));
-      text(svg, lx + 44, ly, `${label}  ${fmt.d3(byName[key].pr_auc)}`, "lbl", "start", key.includes("served") ? { "font-weight": "700" } : {});
+      const short = { "balances after payment (leak)": "leak: balances after", "sees the origin balance": "sees origin balance",
+        "logistic regression, no shortcut": "logistic regression", "served model, no shortcut": "served model" };
+      text(svg, lx + 44, ly, `${small ? short[label] || label : label}  ${fmt.d3(byName[key].pr_auc)}`, "lbl", "start", key.includes("served") ? { "font-weight": "700" } : {});
     });
     armDrawOn(svg);
   }
@@ -222,13 +248,14 @@
       svg.appendChild(g.line(X(v), T - 18, X(v), T + rows.length * rowH - 6, { stroke: C.grey, strokeWidth: 1, roughness: 0.4, seed: 500 + i, strokeLineDash: [3, 6] }));
       text(svg, X(v), T - 24, v.toFixed(2), "tick", "middle");
     });
-    text(svg, W - R, H - 12, "average precision on the rolling windows →", "tick", "end");
+    text(svg, W - R - 44, H - 12, small ? "avg precision, rolling windows" : "average precision on the rolling windows", "tick", "end");
+    arrow(g, svg, W - R - 36, H - 18, W - R, H - 18, C.soft, 590);
     rows.forEach((r, i) => {
       const y = T + i * rowH + (small ? 26 : 12);
       const served = r.k.includes("served") || r.k === "leaves=15, min_child=1000";
       const rejected = r.k.includes("hours since last");
       const color = served ? C.tealInk : rejected ? C.pinkInk : C.ink;
-      const label = r.k.replace("leaves=", "trees with ").replace(", min_child=", " leaves, ≥").replace(/(\d+)$/, "$1 rows per leaf")
+      const label = r.k.replace("leaves=", small ? "" : "trees with ").replace(", min_child=", " leaves, ≥").replace(/(\d+)$/, "$1 rows per leaf")
         .replace(" (served)", "").replace("+ history + hours since last", "+ hours since last paid") +
         (served ? " · kept" : rejected ? " · drifts, rejected" : "");
       text(svg, small ? 4 : labelW, small ? y - 16 : y + 5, label, "tick", small ? "start" : "end", { fill: color, "font-weight": served ? "700" : "400" });
@@ -244,8 +271,20 @@
     input.max = String(sweep.length - 1);
     const def = sweep.findIndex((r) => r.review_cost === 10000);
     input.value = String(def >= 0 ? def : Math.floor(sweep.length / 2));
+    const art = document.getElementById("range-art");
+    const drawKnob = () => {
+      const { width: w, height: h } = art.getBoundingClientRect();
+      if (!w) return;
+      clear(art); art.setAttribute("viewBox", `0 0 ${w} ${h}`);
+      const g = rc(art), t = +input.value / +input.max, kx = 17 + t * (w - 34), y = h / 2;
+      art.appendChild(g.line(6, y, w - 6, y, { stroke: C.ink, strokeWidth: 2.4, roughness: 1, seed: 640 }));
+      art.appendChild(g.line(6, y, kx, y, { stroke: C.ink, strokeWidth: 5, roughness: 0.8, seed: 641 }));
+      art.appendChild(g.circle(kx, y, 30, { stroke: C.ink, strokeWidth: 2.4, fill: C.yellow, fillStyle: "solid", roughness: 1, seed: 642 }));
+    };
+    new ResizeObserver(drawKnob).observe(art);
     const render = () => {
       const r = sweep[+input.value];
+      drawKnob();
       out.textContent = fmt.n(r.review_cost);
       input.setAttribute("aria-valuetext", `review cost ${fmt.n(r.review_cost)}`);
       readout.innerHTML = `At a review cost of <b>${fmt.n(r.review_cost)}</b>, I'd send <b>${fmt.n(r.alerts)}</b> transactions to review. ` +
@@ -271,21 +310,24 @@
     const s = m.signature;
     const fraudHits = Math.round((s.fraud_equal / s.fraud) * 100);
     const legitHits = Math.round((s.legit_equal / s.legit) * 100);
-    const fill = (id, hits, cls) => {
+    const fill = (id, hits, seed) => {
       const box = document.getElementById(id);
-      box.querySelectorAll(".dot").forEach((d) => d.remove());
+      box.querySelectorAll("svg.field").forEach((n) => n.remove());
+      const svg = el("svg", { class: "field", viewBox: "0 0 400 400", "aria-hidden": "true" }, box), g = rc(svg);
       // scatter the matches so the field doesn't sort itself before you press anything
       const order = Array.from({ length: 100 }, (_, i) => i).sort((a, b) => ((a * 37) % 101) - ((b * 37) % 101));
       const hitSet = new Set(order.slice(0, hits));
       for (let i = 0; i < 100; i++) {
-        const d = document.createElement("span");
-        d.className = `dot ${cls}${hitSet.has(i) ? " match" : ""}`;
-        d.style.setProperty("--i", i);
-        box.appendChild(d);
+        const cx = 20 + (i % 10) * 40, cy = 20 + Math.floor(i / 10) * 40;
+        const dot = el("g", { class: `dot${hitSet.has(i) ? " match" : ""}`, style: `--i:${i}` }, svg);
+        const f = g.circle(cx, cy, 25, { stroke: "none", fill: C.pink, fillStyle: "solid", roughness: 1.2, seed: seed + i });
+        f.classList.add("fill");
+        dot.appendChild(f);
+        dot.appendChild(g.circle(cx, cy, 28, { stroke: C.ink, strokeWidth: 1.8, roughness: 1.1, seed: seed + 300 + i }));
       }
     };
-    fill("dots-fraud", fraudHits, "fraud");
-    fill("dots-legit", legitHits, "legit");
+    fill("dots-fraud", fraudHits, 1000);
+    fill("dots-legit", legitHits, 2000);
     const field = document.getElementById("trickfield"), btn = document.getElementById("apply");
     const tF = document.getElementById("tally-fraud"), tL = document.getElementById("tally-legit");
     btn.addEventListener("click", () => {
@@ -315,7 +357,15 @@
         fill(p.tx); form.requestSubmit();
       });
       presets.appendChild(b);
+      sketchOutline(b, { seed: 820 + i, width: 1.8 });
       if (i === 0) fill(p.tx);
+    });
+    form.querySelectorAll("input, select").forEach((field, i) => {
+      const box = document.createElement("span");
+      box.className = "box";
+      field.replaceWith(box);
+      box.appendChild(field);
+      sketchOutline(box, { seed: 860 + i, width: 1.8, roughness: 0.9 });
     });
 
     const drawReasons = (rs) => {

@@ -21,7 +21,7 @@ Numbers come only from `docs/data/*.json` mirrored from `reports/`. Page fully r
 
 THESIS: The case study as a technical zine a friend sketches for you: the hard idea (a benchmark solved by one line) drawn so it lands in one viewport. Refuses the category default, a sans headline over a sticky blue-and-red chart.
 
-OWN-WORLD: Paper #FFF8E8, ink #111, flat highlighter swipes: pink is the trick (the shortcut, every "gotcha"), teal is reserved for the honest model, yellow marks the one line that matters. Permanent Marker for display, Patrick Hand SC for headings and labels, Atkinson Hyperlegible for the body, JetBrains Mono for code and figures. Every box, underline, arrow and chart axis is sketched (rough.js), and a small mascot changes expression: curious, gotcha, worried, satisfied.
+OWN-WORLD: Paper #FFF8E8, ink #111, flat highlighter swipes: pink is the trick (the shortcut, every "gotcha"), teal is reserved for the honest model, yellow marks the one line that matters. Permanent Marker for display, Patrick Hand SC for headings and labels, Figtree for the body (Atkinson Hyperlegible was dropped during the build: its slashed zero made "100" read as "1ØØ"), JetBrains Mono for code and figures. Every box, underline, arrow and chart axis is sketched (rough.js), and a small mascot changes expression: curious, gotcha, worried, satisfied.
 
 STORY: The reader learns the 0.98 was a one-line simulator shortcut, believes the honest 0.634 because every choice shows its evidence, the mistakes included, then scores a transaction live and opens the repo.
 
