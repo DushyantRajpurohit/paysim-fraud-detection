@@ -2,7 +2,7 @@
 
 [![CI](../../actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
 
-**Live demo: [paysim-fraud-detection-591g.onrender.com](https://paysim-fraud-detection-591g.onrender.com)** (free hosting: the first visit can take a minute to wake it up)
+**The story, illustrated: [dushyantrajpurohit.github.io/paysim-fraud-detection](https://dushyantrajpurohit.github.io/paysim-fraud-detection/)** · Live API demo: [paysim-fraud-detection-591g.onrender.com](https://paysim-fraud-detection-591g.onrender.com) (free hosting: the first visit can take a minute to wake it up)
 
 A fraud model for mobile-money transfers: time-ordered evaluation, a threshold
 chosen by cost, per-prediction explanations, and a FastAPI scoring service
