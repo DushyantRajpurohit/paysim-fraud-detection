@@ -279,3 +279,10 @@ tr.shortcut td { background: rgba(255, 111, 174, 0.16); }
   .callout { width: 11rem; font-size: 1.15rem; bottom: -4.6rem; }
   .hero-mascot { width: 5.5rem; height: 5.5rem; bottom: -5.5rem; left: -0.5rem; }
 }
+
+/* Last on purpose: the font shorthand above resets ligature settings, so code would
+   show "==" as one joined glyph. Readers need to see the two characters. */
+code, pre, pre *, .form input, .fig, .chart .num, .result .meta.data, .readout b, .field .tally b, .slider output {
+  font-variant-ligatures: none;
+  font-feature-settings: "calt" 0, "liga" 0;
+}
