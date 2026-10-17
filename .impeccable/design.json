@@ -1,0 +1,388 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-17T15:27:40+00:00",
+  "title": "Design System: The Fraud Zine",
+  "extensions": {
+    "colorMeta": {
+      "zine-paper": {
+        "role": "neutral",
+        "displayName": "Zine Paper",
+        "canonical": "oklch(98.0% 0.022 87.1)",
+        "tonalRamp": [
+          "#0c0b08",
+          "#272520",
+          "#45423b",
+          "#646159",
+          "#868278",
+          "#aaa599",
+          "#cfc9bb",
+          "#f5eede"
+        ]
+      },
+      "paper-light": {
+        "role": "neutral",
+        "displayName": "Paper Light",
+        "canonical": "oklch(99.4% 0.009 93.6)",
+        "tonalRamp": [
+          "#0c0b0a",
+          "#262523",
+          "#43423f",
+          "#62615e",
+          "#83827e",
+          "#a6a5a0",
+          "#cbc9c3",
+          "#f0eee8"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(17.8% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "canonical": "oklch(33.6% 0.012 72.4)",
+        "tonalRamp": [
+          "#0e0a07",
+          "#29241f",
+          "#46413b",
+          "#65605b",
+          "#86817c",
+          "#a8a49f",
+          "#ccc8c4",
+          "#f1eeea"
+        ]
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Ink Faint",
+        "canonical": "oklch(50.4% 0.021 78.1)",
+        "tonalRamp": [
+          "#0f0a05",
+          "#2a241c",
+          "#484137",
+          "#686054",
+          "#898176",
+          "#aba499",
+          "#cfc8be",
+          "#f4eee5"
+        ]
+      },
+      "pencil-grey": {
+        "role": "neutral",
+        "displayName": "Pencil Grey",
+        "canonical": "oklch(74.5% 0.025 79.7)",
+        "tonalRamp": [
+          "#0e0b06",
+          "#29241d",
+          "#474137",
+          "#676055",
+          "#8a8174",
+          "#ada494",
+          "#d1c8b9",
+          "#f6eddf"
+        ]
+      },
+      "highlighter-yellow": {
+        "role": "primary",
+        "displayName": "Highlighter Yellow",
+        "canonical": "oklch(92.4% 0.168 100.7)",
+        "tonalRamp": [
+          "#120a00",
+          "#2e2500",
+          "#4e4200",
+          "#706200",
+          "#938304",
+          "#b9a723",
+          "#e0cb3b",
+          "#fff15d"
+        ]
+      },
+      "highlighter-pink": {
+        "role": "secondary",
+        "displayName": "Highlighter Pink",
+        "canonical": "oklch(73.4% 0.186 355.3)",
+        "tonalRamp": [
+          "#25000d",
+          "#4b0027",
+          "#731745",
+          "#9e3365",
+          "#cb4f87",
+          "#fa6caa",
+          "#ff96ce",
+          "#ffc2f3"
+        ]
+      },
+      "pink-ink": {
+        "role": "secondary",
+        "displayName": "Pink Ink",
+        "canonical": "oklch(53.1% 0.202 5.6)",
+        "tonalRamp": [
+          "#300004",
+          "#59001a",
+          "#850034",
+          "#b20651",
+          "#d94272",
+          "#fa7195",
+          "#ff9cbb",
+          "#ffc8e1"
+        ]
+      },
+      "highlighter-teal": {
+        "role": "tertiary",
+        "displayName": "Highlighter Teal",
+        "canonical": "oklch(78.5% 0.133 181.9)",
+        "tonalRamp": [
+          "#00130d",
+          "#003028",
+          "#005145",
+          "#007365",
+          "#009887",
+          "#19beab",
+          "#52e4cf",
+          "#8dfff4"
+        ]
+      },
+      "teal-ink": {
+        "role": "tertiary",
+        "displayName": "Teal Ink",
+        "canonical": "oklch(51.1% 0.086 186.4)",
+        "tonalRamp": [
+          "#00120f",
+          "#002f2a",
+          "#004f48",
+          "#067069",
+          "#42928a",
+          "#6eb4ac",
+          "#9ad7cf",
+          "#c5fbf4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline only; marker also sets the brand, chapter numerals, verdicts and the callout."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Chapter titles with sketched underlines."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Set-aside, field and closing headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose at a 68ch measure."
+      },
+      "body-lead": {
+        "displayName": "Dek",
+        "purpose": "Hero dek at 46ch in ink soft."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, chips, contents, form labels, table headers, chart text."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Code, inputs and every checkable figure; ligatures off."
+      }
+    },
+    "shadows": [],
+    "sketch": [
+      {
+        "name": "frame",
+        "value": "rough.rectangle strokeWidth 2.2-2.4, roughness 1.1, bowing 1.2, fixed seed per element",
+        "purpose": "Buttons, code card, set-asides, result panel, dot fields."
+      },
+      {
+        "name": "frame-small",
+        "value": "rough.rectangle strokeWidth 1.8, roughness 0.9-1.1",
+        "purpose": "Chips and inputs."
+      },
+      {
+        "name": "underline",
+        "value": "rough.curve strokeWidth 2.6 (ink) or 4 (highlighter), roughness 1.4",
+        "purpose": "Chapter headings: pink for the trick chapter, teal for honest-model chapters, ink otherwise."
+      },
+      {
+        "name": "arrow",
+        "value": "rough line plus two-stroke head, strokeWidth 1.8-2.6",
+        "purpose": "Doodled pointers; pink ink when pointing at the trick."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All transitions."
+      },
+      {
+        "name": "swipe-draw",
+        "value": "background-size 0.9s, 0.15s delay",
+        "purpose": "Highlighter swipes sweeping on when their chapter arrives."
+      },
+      {
+        "name": "path-draw",
+        "value": "stroke-dashoffset 1.2s",
+        "purpose": "Chart paths drawing on."
+      },
+      {
+        "name": "button-tip",
+        "value": "translate(-1px,-2px) rotate(-0.6deg), 0.25s",
+        "purpose": "Button hover."
+      },
+      {
+        "name": "dot-sort",
+        "value": "transform 0.7s, opacity 0.4s, 6ms stagger per dot",
+        "purpose": "The trick's dot field sorting itself."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "marks pre-drawn; smooth scroll off",
+        "purpose": "prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "rail-collapse",
+        "value": "960px"
+      },
+      {
+        "name": "table-stack",
+        "value": "600px"
+      },
+      {
+        "name": "compact",
+        "value": "520px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Yellow-filled sketched button for the one action that matters; a second ink stroke under its bottom edge.",
+      "html": "<a class=\"ds-btn ds-btn-primary\" href=\"#\"><svg class=\"ds-sketch\" viewBox=\"0 0 200 50\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M3 4 C 60 2 140 5 197 3 M196 2 C 198 18 197 34 197 47 M198 46 C 130 48 60 46 2 47 M3 48 C 2 32 4 18 2 3\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.2\" stroke-linecap=\"round\" vector-effect=\"non-scaling-stroke\"/></svg><span>Read how I found it</span><svg class=\"ds-arrow\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12h15m-6-6 6 6-6 6\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></a>",
+      "css": ":host{--paper:#fff8e8;--paper-light:#fffdf6;--ink:#111111;--ink-soft:#3b3630;--ink-faint:#6b6357;--yellow:#ffe84d;--pink:#ff6fae;--pink-ink:#c2185b;--teal:#2dd4bf;--teal-ink:#0f766e;--hand:'Patrick Hand SC','Comic Sans MS',cursive;--marker:'Permanent Marker','Comic Sans MS',cursive;--mono:'JetBrains Mono',ui-monospace,monospace;--ease:cubic-bezier(0.16,1,0.3,1);} .ds-sketch{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;} .ds-btn{position:relative;display:inline-flex;align-items:center;gap:0.5rem;padding:0.55rem 1.15rem;background:none;font:400 1.15rem/1.2 var(--hand);color:var(--ink);text-decoration:none;transition:transform 0.25s var(--ease);} .ds-btn>span,.ds-arrow{position:relative;} .ds-btn:hover{transform:translate(-1px,-2px) rotate(-0.6deg);} .ds-btn:active{transform:none;} .ds-btn:focus-visible{outline:3px solid var(--teal-ink);outline-offset:3px;border-radius:4px;} .ds-arrow{width:1.1em;height:1.1em;} .ds-btn-primary{background:var(--yellow);border-radius:6px;} .ds-btn-primary::after{content:'';position:absolute;left:8px;right:-1px;bottom:-2px;height:2.5px;background:var(--ink);border-radius:2px;}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Unfilled sketched frame for the secondary action.",
+      "html": "<a class=\"ds-btn\" href=\"#\"><svg class=\"ds-sketch\" viewBox=\"0 0 200 50\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M3 4 C 60 2 140 5 197 3 M196 2 C 198 18 197 34 197 47 M198 46 C 130 48 60 46 2 47 M3 48 C 2 32 4 18 2 3\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.2\" stroke-linecap=\"round\" vector-effect=\"non-scaling-stroke\"/></svg><span>Try the honest model</span></a>",
+      "css": ":host{--paper:#fff8e8;--paper-light:#fffdf6;--ink:#111111;--ink-soft:#3b3630;--ink-faint:#6b6357;--yellow:#ffe84d;--pink:#ff6fae;--pink-ink:#c2185b;--teal:#2dd4bf;--teal-ink:#0f766e;--hand:'Patrick Hand SC','Comic Sans MS',cursive;--marker:'Permanent Marker','Comic Sans MS',cursive;--mono:'JetBrains Mono',ui-monospace,monospace;--ease:cubic-bezier(0.16,1,0.3,1);} .ds-sketch{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;} .ds-btn{position:relative;display:inline-flex;align-items:center;gap:0.5rem;padding:0.55rem 1.15rem;background:none;font:400 1.15rem/1.2 var(--hand);color:var(--ink);text-decoration:none;transition:transform 0.25s var(--ease);} .ds-btn>span,.ds-arrow{position:relative;} .ds-btn:hover{transform:translate(-1px,-2px) rotate(-0.6deg);} .ds-btn:active{transform:none;} .ds-btn:focus-visible{outline:3px solid var(--teal-ink);outline-offset:3px;border-radius:4px;} "
+    },
+    {
+      "name": "Preset Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Scenario preset; yellow when hovered or pressed.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"true\"><svg class=\"ds-sketch\" viewBox=\"0 0 200 50\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M3 4 C 60 2 140 5 197 3 M196 2 C 198 18 197 34 197 47 M198 46 C 130 48 60 46 2 47 M3 48 C 2 32 4 18 2 3\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.2\" stroke-linecap=\"round\" vector-effect=\"non-scaling-stroke\"/></svg><span>Caught fraud</span></button> <button class=\"ds-chip\" aria-pressed=\"false\"><svg class=\"ds-sketch\" viewBox=\"0 0 200 50\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M3 4 C 60 2 140 5 197 3 M196 2 C 198 18 197 34 197 47 M198 46 C 130 48 60 46 2 47 M3 48 C 2 32 4 18 2 3\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.2\" stroke-linecap=\"round\" vector-effect=\"non-scaling-stroke\"/></svg><span>False alarm</span></button>",
+      "css": ":host{--paper:#fff8e8;--paper-light:#fffdf6;--ink:#111111;--ink-soft:#3b3630;--ink-faint:#6b6357;--yellow:#ffe84d;--pink:#ff6fae;--pink-ink:#c2185b;--teal:#2dd4bf;--teal-ink:#0f766e;--hand:'Patrick Hand SC','Comic Sans MS',cursive;--marker:'Permanent Marker','Comic Sans MS',cursive;--mono:'JetBrains Mono',ui-monospace,monospace;--ease:cubic-bezier(0.16,1,0.3,1);} .ds-sketch{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;} .ds-chip{position:relative;font:400 1.02rem/1.2 var(--hand);padding:0.45rem 0.85rem;border-radius:6px;border:0;background:transparent;color:var(--ink);cursor:pointer;transition:background-color 0.25s var(--ease);} .ds-chip>span{position:relative;} .ds-chip:hover,.ds-chip[aria-pressed=\"true\"]{background:var(--yellow);} .ds-chip:focus-visible{outline:3px solid var(--teal-ink);outline-offset:3px;border-radius:4px;}"
+    },
+    {
+      "name": "Mono Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Form field: paper-light fill, mono value, sketched frame, hand-lettered label.",
+      "html": "<label class=\"ds-field\">Amount<span class=\"ds-box\"><svg class=\"ds-sketch\" viewBox=\"0 0 200 50\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M3 4 C 60 2 140 5 197 3 M196 2 C 198 18 197 34 197 47 M198 46 C 130 48 60 46 2 47 M3 48 C 2 32 4 18 2 3\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.2\" stroke-linecap=\"round\" vector-effect=\"non-scaling-stroke\"/></svg><input value=\"181.00\"></span></label>",
+      "css": ":host{--paper:#fff8e8;--paper-light:#fffdf6;--ink:#111111;--ink-soft:#3b3630;--ink-faint:#6b6357;--yellow:#ffe84d;--pink:#ff6fae;--pink-ink:#c2185b;--teal:#2dd4bf;--teal-ink:#0f766e;--hand:'Patrick Hand SC','Comic Sans MS',cursive;--marker:'Permanent Marker','Comic Sans MS',cursive;--mono:'JetBrains Mono',ui-monospace,monospace;--ease:cubic-bezier(0.16,1,0.3,1);} .ds-sketch{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;} .ds-field{display:grid;gap:0.2rem;font:400 1rem/1.2 var(--hand);color:var(--ink-soft);max-width:16rem;} .ds-box{position:relative;display:block;} .ds-box input{position:relative;width:100%;font:400 1rem var(--mono);font-feature-settings:'calt' 0,'liga' 0;color:var(--ink);background:var(--paper-light);padding:0.55rem 0.7rem;border:0;border-radius:6px;} .ds-box input:focus-visible{outline:3px solid var(--teal-ink);outline-offset:3px;border-radius:4px;}"
+    },
+    {
+      "name": "Contents Rail",
+      "kind": "nav",
+      "refersTo": "toc-link",
+      "description": "Numbered chapter list; the reader's current chapter is filled yellow.",
+      "html": "<ol class=\"ds-toc\"><li><a href=\"#\"><span>2</span>What’s in the data</a></li><li><a href=\"#\" aria-current=\"true\"><span>3</span>The trick</a></li><li><a href=\"#\"><span>4</span>Taking it away</a></li></ol>",
+      "css": ":host{--paper:#fff8e8;--paper-light:#fffdf6;--ink:#111111;--ink-soft:#3b3630;--ink-faint:#6b6357;--yellow:#ffe84d;--pink:#ff6fae;--pink-ink:#c2185b;--teal:#2dd4bf;--teal-ink:#0f766e;--hand:'Patrick Hand SC','Comic Sans MS',cursive;--marker:'Permanent Marker','Comic Sans MS',cursive;--mono:'JetBrains Mono',ui-monospace,monospace;--ease:cubic-bezier(0.16,1,0.3,1);} .ds-toc{list-style:none;margin:0;padding:0;display:grid;gap:0.15rem;max-width:16rem;} .ds-toc a{display:grid;grid-template-columns:1.6rem 1fr;align-items:baseline;padding:0.3rem 0.55rem;border-radius:6px;text-decoration:none;font:400 1.12rem/1.25 var(--hand);color:var(--ink-soft);transition:background-color 0.3s var(--ease),color 0.3s var(--ease);} .ds-toc a span{font-family:var(--marker);font-size:0.95rem;color:var(--ink-faint);} .ds-toc a:hover{color:var(--ink);background:rgba(255,232,77,0.45);} .ds-toc a[aria-current=\"true\"]{color:var(--ink);background:var(--yellow);} .ds-toc a[aria-current=\"true\"] span{color:var(--ink);} .ds-toc a:focus-visible{outline:3px solid var(--teal-ink);outline-offset:3px;border-radius:4px;}"
+    },
+    {
+      "name": "Highlighter Swipes",
+      "kind": "custom",
+      "description": "Ragged marker emphasis with fixed meanings: yellow the line that matters, pink the trick, teal the honest model.",
+      "html": "<p class=\"ds-text\"><span class=\"ds-hl ds-y\">0.980 PR-AUC</span>, <span class=\"ds-hl ds-p\">one line</span>, <span class=\"ds-hl ds-t\">the honest model</span></p>",
+      "css": ":host{--paper:#fff8e8;--paper-light:#fffdf6;--ink:#111111;--ink-soft:#3b3630;--ink-faint:#6b6357;--yellow:#ffe84d;--pink:#ff6fae;--pink-ink:#c2185b;--teal:#2dd4bf;--teal-ink:#0f766e;--hand:'Patrick Hand SC','Comic Sans MS',cursive;--marker:'Permanent Marker','Comic Sans MS',cursive;--mono:'JetBrains Mono',ui-monospace,monospace;--ease:cubic-bezier(0.16,1,0.3,1);} .ds-text{font:400 1.0625rem/1.65 Figtree,system-ui,sans-serif;color:var(--ink);} .ds-hl{background-repeat:no-repeat;background-size:100% 100%;background-position:0 60%;padding:0 0.22em;margin:0 -0.22em;box-decoration-break:clone;-webkit-box-decoration-break:clone;} .ds-y{background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cpath d='M8 8 L2 13 L7 17 L1 23 L6 28 L3 35 C 60 38 140 36 196 32 L199 26 L194 21 L199 15 L193 7 C 130 3 70 4 8 8 Z' fill='rgb(255,232,77)' fill-opacity='.9'/%3E%3C/svg%3E\");} .ds-p{background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cpath d='M8 8 L2 13 L7 17 L1 23 L6 28 L3 35 C 60 38 140 36 196 32 L199 26 L194 21 L199 15 L193 7 C 130 3 70 4 8 8 Z' fill='rgb(255,111,174)' fill-opacity='.75'/%3E%3C/svg%3E\");} .ds-t{background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cpath d='M8 8 L2 13 L7 17 L1 23 L6 28 L3 35 C 60 38 140 36 196 32 L199 26 L194 21 L199 15 L193 7 C 130 3 70 4 8 8 Z' fill='rgb(45,212,191)' fill-opacity='.7'/%3E%3C/svg%3E\");} "
+    },
+    {
+      "name": "Code Card",
+      "kind": "card",
+      "refersTo": "code-card",
+      "description": "Tilted paper-light sheet holding the key code, with the hit in yellow.",
+      "html": "<div class=\"ds-code\"><svg class=\"ds-sketch\" viewBox=\"0 0 200 50\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path d=\"M3 4 C 60 2 140 5 197 3 M196 2 C 198 18 197 34 197 47 M198 46 C 130 48 60 46 2 47 M3 48 C 2 32 4 18 2 3\" fill=\"none\" stroke=\"#111\" stroke-width=\"2.2\" stroke-linecap=\"round\" vector-effect=\"non-scaling-stroke\"/></svg><div class=\"ds-file\">fraud_detector.py</div><pre><span class=\"ds-ln\">1</span>def is_fraud(tx):\n<span class=\"ds-ln\">2</span>    return <span class=\"ds-hit\">tx.amount == tx.oldbalanceOrg</span></pre></div>",
+      "css": ":host{--paper:#fff8e8;--paper-light:#fffdf6;--ink:#111111;--ink-soft:#3b3630;--ink-faint:#6b6357;--yellow:#ffe84d;--pink:#ff6fae;--pink-ink:#c2185b;--teal:#2dd4bf;--teal-ink:#0f766e;--hand:'Patrick Hand SC','Comic Sans MS',cursive;--marker:'Permanent Marker','Comic Sans MS',cursive;--mono:'JetBrains Mono',ui-monospace,monospace;--ease:cubic-bezier(0.16,1,0.3,1);} .ds-sketch{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;} .ds-code{position:relative;max-width:30rem;padding:1.4rem 1.5rem 1.5rem;transform:rotate(1.6deg);background:var(--paper-light);border-radius:10px;} .ds-file{position:relative;font:400 0.95rem var(--mono);color:var(--ink-soft);margin-bottom:0.9rem;} .ds-code pre{position:relative;margin:0;font:400 0.95rem/1.9 var(--mono);font-feature-settings:'calt' 0,'liga' 0;white-space:pre-wrap;color:var(--ink);} .ds-ln{color:var(--ink-faint);margin-right:0.9rem;} .ds-hit{background:var(--yellow);padding:0.1rem 0.25rem;border-radius:3px;font-weight:700;}"
+    },
+    {
+      "name": "Verdict",
+      "kind": "custom",
+      "description": "Marker verdict in the scorer: pink ink for review, teal ink for approve.",
+      "html": "<p class=\"ds-v ds-review\">Review</p><p class=\"ds-v ds-approve\">Approve</p>",
+      "css": ":host{--paper:#fff8e8;--paper-light:#fffdf6;--ink:#111111;--ink-soft:#3b3630;--ink-faint:#6b6357;--yellow:#ffe84d;--pink:#ff6fae;--pink-ink:#c2185b;--teal:#2dd4bf;--teal-ink:#0f766e;--hand:'Patrick Hand SC','Comic Sans MS',cursive;--marker:'Permanent Marker','Comic Sans MS',cursive;--mono:'JetBrains Mono',ui-monospace,monospace;--ease:cubic-bezier(0.16,1,0.3,1);} .ds-v{font:400 2rem/1.1 var(--marker);margin:0 0 0.3rem;} .ds-review{color:var(--pink-ink);} .ds-approve{color:var(--teal-ink);}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Zine a Friend Sketches for You",
+    "overview": "A technical argument drawn by hand on cream paper: a marker headline, small-caps handwriting for structure, a calm sans for reading, and monospace for every number and line of code. Nothing is ruled with a straight CSS border where a pen would have drawn it; outlines, underlines, arrows, chart axes, dots and the slider are rendered as wobbly rough.js strokes, and emphasis arrives as ragged highlighter swipes. A faint printed dot screen (14px grid) sits on the paper.\n\nThe page reads like an article, not a dashboard: one text measure (68ch), figures allowed wider (62rem), a sticky contents rail on the left. Colour is scarce and semantic. The three highlighters each carry one meaning, so the reader learns the code in the first viewport and can read every later chart by it. A small inline-SVG mascot in four moods (curious, gotcha, worried, happy) acts as the narrator's face.\n\nPlayfulness is in the drawing, never in the numbers: figures are always JetBrains Mono with ligatures off, tabular in tables, and the body face was chosen for an unslashed zero.",
+    "keyCharacteristics": [
+      "Cream paper (with a faint dot screen) and near-black ink; no gradients, no blur, no box-shadows.",
+      "Every frame and mark is a rough.js stroke; CSS supplies only fills under them.",
+      "Three highlighters with fixed meanings: yellow marks the one line that matters, pink the trick, teal the honest model.",
+      "Four-face type system: marker display, hand-lettered small caps, Figtree body, JetBrains Mono figures.",
+      "Marks draw themselves on when their chapter arrives; under reduced motion they are already drawn."
+    ],
+    "rules": [
+      {
+        "name": "The Fixed Meaning Rule",
+        "body": "In every mark that carries meaning (text swipes, chart series, verdicts, table rows, chapter underlines, SHAP bars) pink means the trick or \"review\", teal means the honest or served model or \"approve\", and yellow means the one thing to read. A new chart or component that needs a third category uses ink, pencil grey, or hatching, never a highlighter borrowed for decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Pairing Rule",
+        "body": "Highlighters are fills; they never set text. Text in a highlighter's meaning uses its ink partner (`pink-ink`, `teal-ink`); body text on a highlighter fill is always `ink`.",
+        "section": "colors"
+      },
+      {
+        "name": "The Every-Figure-Is-Mono Rule",
+        "body": "Any number a reader might check is set in JetBrains Mono, including inside the marker headline's spans and chart labels; table numbers are right-aligned and tabular.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Ligature Rule",
+        "body": "Code, inputs and figures disable `calt` and `liga`, so `==` reads as two characters and the code matches the repository.",
+        "section": "typography"
+      },
+      {
+        "name": "The Drawn Not Lifted Rule",
+        "body": "Separation comes from a pen stroke, a paper tone or a slight tilt, never from a cast shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** draw every new outline, underline, arrow, axis and mark with rough.js using a fixed seed, and let CSS supply only the fill beneath it.",
+      "**Do** keep the highlighter meanings fixed: yellow for the one line that matters, pink for the trick or \"review\", teal for the honest model or \"approve\".",
+      "**Do** set every checkable number in JetBrains Mono with `calt` and `liga` off.",
+      "**Do** keep prose at the 68ch measure and let figures, tables and interactive pieces reach 62rem.",
+      "**Do** draw marks on as their chapter arrives (ease cubic-bezier(0.16, 1, 0.3, 1)) and show them already drawn under reduced motion."
+    ],
+    "donts": [
+      "**Don't** use box-shadows, blur, or gradients for depth; use a stroke, a paper tone or a tilt.",
+      "**Don't** set text in a raw highlighter colour; use ink, or the pink-ink / teal-ink partner.",
+      "**Don't** use a highlighter as decoration or for a meaning it doesn't already carry.",
+      "**Don't** swap Figtree for a body face with a slashed or dotted zero; \"100\" must never read \"1ØØ\"."
+    ]
+  }
+}
